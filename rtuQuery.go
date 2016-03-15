@@ -2,7 +2,7 @@ package rtu
 
 
 import (
-	"gamma/rtu/soap"
+	"github.com/ekrukov/rtu/soap"
 	"log"
 	"errors"
 )

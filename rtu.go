@@ -1,7 +1,7 @@
 package rtu
 
 import (
-	"gamma/rtu/soap"
+	"github.com/ekrukov/rtu/soap"
 )
 
 type RTUClient struct {
