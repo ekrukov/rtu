@@ -2,9 +2,14 @@ package soap
 
 import "encoding/xml"
 
-type String string
-type Integer int
-type AnyType interface{}
+// TODO empty request and responce for unused operations
+type emptyRequest struct {
+
+}
+
+type emptyResponce struct {
+
+}
 
 type ServicePortType struct {
 	client *SOAPClient
@@ -21,92 +26,9 @@ func NewServicePortType(url string, tls bool, auth *SOAPAuth) *ServicePortType {
 	}
 }
 
-func (service *ServicePortType) SelectRowset(request *SelectRowsetRequest) (*SelectRowsetResponce, error) {
-	response := new(SelectRowsetResponce)
-	err := service.client.Call("", request, response)
-	if err != nil {
-		return nil, err
-	}
-
-	return response, nil
-}
-
-func (service *ServicePortType) InsertRowset(request *String) (*Integer, error) {
-	response := new(Integer)
-	err := service.client.Call("", request, response)
-	if err != nil {
-		return nil, err
-	}
-
-	return response, nil
-}
-
-func (service *ServicePortType) UpdateRowset(request *String) (*Integer, error) {
-	response := new(Integer)
-	err := service.client.Call("", request, response)
-	if err != nil {
-		return nil, err
-	}
-
-	return response, nil
-}
-
-func (service *ServicePortType) DeleteRowset(request *String) (*Integer, error) {
-	response := new(Integer)
-	err := service.client.Call("", request, response)
-	if err != nil {
-		return nil, err
-	}
-
-	return response, nil
-}
-
-func (service *ServicePortType) CountRowset(request *String) (*Integer, error) {
-	response := new(Integer)
-	err := service.client.Call("", request, response)
-	if err != nil {
-		return nil, err
-	}
-
-	return response, nil
-}
-
-func (service *ServicePortType) GetTableByTitle(request *String) (*String, error) {
-	response := new(String)
-	err := service.client.Call("", request, response)
-	if err != nil {
-		return nil, err
-	}
-
-	return response, nil
-}
-
-type DescribeColumnRequest struct {
-	XMLName    xml.Name `xml:"http://mfisoft.ru/voip/service/soap describeColumns"`
-	P_table_hi string `xml:",omitempty"`
-}
-
-func (service *ServicePortType) DescribeColumns(request string) (*AnyType, error) {
-	response := new(AnyType)
-	req := new(DescribeColumnRequest)
-	req.P_table_hi = request
-	err := service.client.Call("", req, response)
-	if err != nil {
-		return nil, err
-	}
-
-	return response, nil
-}
-
-func (service *ServicePortType) GetColumnLookup(request *String) (*AnyType, error) {
-	response := new(AnyType)
-	err := service.client.Call("", request, response)
-	if err != nil {
-		return nil, err
-	}
-
-	return response, nil
-}
+/**
+ *	Select Request method and structures
+ */
 
 type SelectRowsetRequest struct {
 	XMLName    xml.Name `xml:"http://mfisoft.ru/voip/service/soap selectRowset"`
@@ -123,17 +45,169 @@ type SelectRowsetResponce struct {
 			XMLName   xml.Name `xml:"result"`
 			ArrayType string `xml:"http://schemas.xmlsoap.org/soap/encoding/ arrayType,attr"`
 			Type_     string `xml:"http://www.w3.org/2001/XMLSchema-instance type,attr"`
-			Item      struct {
+			Rows      []struct {
 					  XMLName xml.Name `xml:"item"`
 					  Type_   string    `xml:"http://www.w3.org/2001/XMLSchema-instance type,attr"`
-					  Items   []selectRowsetItem `xml:"item"`
+					  Items   []selectRowItem `xml:"item"`
 				  } `xml:"item"`
 		} `xml:"result"`
 }
 
-type selectRowsetItem struct {
+
+type selectRowItem struct {
 	XMLName xml.Name `xml:"item"`
 	Key     string `xml:"key"`
 	Value   string `xml:"value"`
 }
+
+func (service *ServicePortType) SelectRowset(request *SelectRowsetRequest) (*SelectRowsetResponce, error) {
+	response := new(SelectRowsetResponce)
+	err := service.client.Call("", request, response)
+	if err != nil {
+		return nil, err
+	}
+
+	return response, nil
+}
+
+/**
+ *	Insert Request method and structures
+ */
+
+type InsertRowsetRequest struct {
+	XMLName    xml.Name `xml:"http://mfisoft.ru/voip/service/soap insertRowset"`
+	P_table_hi string `xml:",omitempty"`
+	P_rowset   Rowset `xml:",omitempty"`
+}
+
+type InsertRowsetResponce struct {
+	XMLName xml.Name `xml:"http://mfisoft.ru/soap insertRowsetResponse"`
+	Result  struct {
+			XMLName xml.Name `xml:"result"`
+		} `xml:"result"`
+}
+
+func (service *ServicePortType) InsertRowset(request *InsertRowsetRequest) (*InsertRowsetResponce, error) {
+	response := new(InsertRowsetResponce)
+	err := service.client.Call("", request, response)
+	if err != nil {
+		return nil, err
+	}
+
+	return response, nil
+}
+
+/**
+ *	Update Request method and structures TODO create update structures
+ */
+
+
+func (service *ServicePortType) UpdateRowset(request *emptyRequest) (*emptyResponce, error) {
+	response := new(emptyResponce)
+	err := service.client.Call("", request, response)
+	if err != nil {
+		return nil, err
+	}
+
+	return response, nil
+}
+
+/**
+ *	Delete Request method and structures
+ */
+
+type DeleteRowsetRequest struct {
+	XMLName    xml.Name `xml:"http://mfisoft.ru/voip/service/soap deleteRowset"`
+	P_table_hi string `xml:",omitempty"`
+	P_rowset   Rowset `xml:",omitempty"`
+	Filter     Filter `xml:",omitempty"`
+}
+
+type DeleteRowsetResponce struct {
+	XMLName xml.Name `xml:"http://mfisoft.ru/soap deleteRowsetResponse"`
+	Result  struct {
+			XMLName xml.Name `xml:"result"`
+		} `xml:"result"`
+}
+
+func (service *ServicePortType) DeleteRowset(request *DeleteRowsetRequest) (*DeleteRowsetResponce, error) {
+	response := new(DeleteRowsetResponce)
+	err := service.client.Call("", request, response)
+	if err != nil {
+		return nil, err
+	}
+
+	return response, nil
+}
+
+/**
+ *	Count Request method and structures
+ */
+
+type CountRowsetRequest struct {
+	XMLName    xml.Name `xml:"http://mfisoft.ru/voip/service/soap countRowset"`
+	P_table_hi string `xml:",omitempty"`
+	P_rowset   Rowset `xml:",omitempty"`
+	Filter     Filter `xml:",omitempty"`
+}
+
+type CountRowsetResponce struct {
+	XMLName xml.Name `xml:"http://mfisoft.ru/soap countRowsetResponse"`
+	Result  struct {
+			XMLName xml.Name `xml:"result"`
+		} `xml:"result"`
+}
+
+func (service *ServicePortType) CountRowset(request *CountRowsetRequest) (*CountRowsetResponce, error) {
+	response := new(CountRowsetResponce)
+	err := service.client.Call("", request, response)
+	if err != nil {
+		return nil, err
+	}
+
+	return response, nil
+}
+
+/**
+ *	Unused method and structures
+ */
+
+
+func (service *ServicePortType) GetTableByTitle(request *emptyRequest) (*emptyResponce, error) {
+	response := new(emptyResponce)
+	err := service.client.Call("", request, response)
+	if err != nil {
+		return nil, err
+	}
+
+	return response, nil
+}
+
+type DescribeColumnRequest struct {
+	XMLName    xml.Name `xml:"http://mfisoft.ru/voip/service/soap describeColumns"`
+	P_table_hi string `xml:",omitempty"`
+}
+
+func (service *ServicePortType) DescribeColumns(request string) (*emptyResponce, error) {
+	response := new(emptyResponce)
+	req := new(DescribeColumnRequest)
+	req.P_table_hi = request
+	err := service.client.Call("", req, response)
+	if err != nil {
+		return nil, err
+	}
+
+	return response, nil
+}
+
+func (service *ServicePortType) GetColumnLookup(request *emptyRequest) (*emptyResponce, error) {
+	response := new(emptyResponce)
+	err := service.client.Call("", request, response)
+	if err != nil {
+		return nil, err
+	}
+
+	return response, nil
+}
+
 

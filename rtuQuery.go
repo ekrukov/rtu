@@ -6,6 +6,7 @@ import (
 	"errors"
 )
 
+
 type RTUQuery struct {
 	client         *RTUClient
 	Action         string
@@ -99,13 +100,14 @@ func (q *RTUQuery) OrderBy(sort soap.Ordertype) *RTUQuery {
 	return q
 }
 
-func (q *RTUQuery) Run() (res interface{}, err error) {
+func (q *RTUQuery) Run() (res *QueryResponce, err error) {
+	res = new(QueryResponce)
 	if q.err != nil {
 		return nil, q.err
 	}
 	switch q.Action {
 	case "select":
-		res, err = q.client.SOAPClient.SelectRowset(&soap.SelectRowsetRequest{
+		res.Select, err = q.client.SOAPClient.SelectRowset(&soap.SelectRowsetRequest{
 			P_table_hi: q.tableId,
 			Filter: *q.Filter,
 			Sort: q.Sort,
@@ -118,6 +120,12 @@ func (q *RTUQuery) Run() (res interface{}, err error) {
 
 func (q *RTUQuery) Print() {
 	log.Printf("%+v", q)
+}
+
+type QueryResponce struct {
+	Select *soap.SelectRowsetResponce
+	Insert *soap.InsertRowsetResponce
+	Delete *soap.DeleteRowsetResponce
 }
 
 
