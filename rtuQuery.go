@@ -18,7 +18,7 @@ type RTUQuery struct {
 	Limit int
 	Offset int
 	InsertTemplate *soap.Template
-	err string
+	err error
 }
 
 func NewRTUQuery(c *RTUClient) *RTUQuery{
@@ -37,7 +37,7 @@ func (q *RTUQuery) Select() *RTUQuery{
 
 func (q *RTUQuery) Update(table string) *RTUQuery{
 	q.Action = "update"
-	q.tableId = soap.GetTableIdByName(table)
+	q.tableId, q.err = soap.GetTableIdByName(table)
 	return q
 }
 
@@ -54,8 +54,9 @@ func (q *RTUQuery) Insert(template *soap.Template) *RTUQuery{
 
 func (q *RTUQuery) Set(rowset *soap.Rowset) *RTUQuery{
 	if q.Action != "update" {
-		q.err = "RTUQuery builder error, set without update"
-		log.Fatal(q.err)
+		errorString := "RTUQuery builder error, set without update"
+		q.err = errors.New(errorString)
+		log.Fatal(errorString)
 	} else {
 		q.Rowset = rowset
 	}
@@ -64,20 +65,22 @@ func (q *RTUQuery) Set(rowset *soap.Rowset) *RTUQuery{
 
 func (q *RTUQuery) From(table string) *RTUQuery{
 	if q.Action == "select" || q.Action == "delete" {
-		q.tableId = soap.GetTableIdByName(table)
+		q.tableId, q.err = soap.GetTableIdByName(table)
 	} else {
-		q.err = "RTUQuery builder error, from without select or delete"
-		log.Fatal(q.err)
+		errorString := "RTUQuery builder error, from without select or delete"
+		q.err = errors.New(errorString)
+		log.Fatal(errorString)
 	}
 	return q
 }
 
 func (q *RTUQuery) Into(table string) *RTUQuery{
 	if q.Action == "insert" {
-		q.tableId = soap.GetTableIdByName(table)
+		q.tableId, q.err = soap.GetTableIdByName(table)
 	} else {
-		q.err = "RTUQuery builder error, into without insert"
-		log.Fatal(q.err)
+		errorString := "RTUQuery builder error, into without insert"
+		q.err = errors.New(errorString)
+		log.Fatal(errorString)
 	}
 	return q
 }
@@ -98,6 +101,9 @@ func (q *RTUQuery) OrderBy(sort soap.Ordertype) *RTUQuery{
 }
 
 func (q *RTUQuery) Run() (res interface{}, err error) {
+	if q.err != nil {
+		return nil, q.err
+	}
 	switch q.Action {
 	case "select":
 		res, err = q.client.SOAPClient.SelectRowset(&soap.SelectRowsetRequest{

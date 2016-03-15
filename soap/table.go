@@ -1,5 +1,10 @@
 package soap
 
+import (
+	"log"
+	"errors"
+)
+
 var tableIds = map[string]string{
 	"cdrH": "02.2205.01",
 	"cdrD": "02.2206.01",
@@ -8,6 +13,11 @@ var tableIds = map[string]string{
 	"cdrA": "02.2204.01",
 }
 
-func GetTableIdByName(n string) string {
-	return tableIds[n]
+func GetTableIdByName(n string) (id string , err error){
+	if id, ok := tableIds[n]; ok {
+		return id, nil
+	} else {
+		log.Fatal("")
+		return "", errors.New("Attempt to search for unknown table")
+	}
 }
