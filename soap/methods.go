@@ -32,7 +32,7 @@ type SelectRowsetRequest struct {
 
 type SelectRowsetResponce struct {
 	XMLName xml.Name `xml:"http://mfisoft.ru/soap selectRowsetResponse"`
-	Result  ResponceRowResult `xml:"result"`
+	Result  ResponceRowset `xml:"result"`
 }
 
 func (service *ServicePortType) SelectRowset(request *SelectRowsetRequest) (*SelectRowsetResponce, error) {
@@ -157,7 +157,7 @@ type DescribeColumnRequest struct {
 
 type DescribeColumnResponce struct {
 	XMLName xml.Name `xml:"http://mfisoft.ru/soap describeColumnsResponse"`
-	Result  ResponceRowResult `xml:"result"`
+	Result  ResponceRowset `xml:"result"`
 }
 
 func (service *ServicePortType) DescribeColumns(request string) (*DescribeColumnResponce, error) {
