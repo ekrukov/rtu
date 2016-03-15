@@ -59,3 +59,17 @@ type Filter struct {
 	Childs   *Filterchildsarr //`xml:"childs,omitempty"`
 }
 
+type ResponceRowResult  struct {
+	XMLName   xml.Name `xml:"result"`
+	ArrayType string `xml:"http://schemas.xmlsoap.org/soap/encoding/ arrayType,attr"`
+	Type_     string `xml:"http://www.w3.org/2001/XMLSchema-instance type,attr"`
+	Rows      []struct {
+		XMLName xml.Name `xml:"item"`
+		Type_   string    `xml:"http://www.w3.org/2001/XMLSchema-instance type,attr"`
+		Items   []struct {
+			XMLName xml.Name `xml:"item"`
+			Key     string `xml:"key"`
+			Value   string `xml:"value"`
+		} `xml:"item"`
+	} `xml:"item"`
+}

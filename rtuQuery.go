@@ -105,6 +105,13 @@ func (q *RTUQuery) Describe(table string) *RTUQuery {
 	return q
 }
 
+func (q *RTUQuery) Count(table string, filter *soap.Filter) *RTUQuery {
+	q.Action = "count"
+	q.tableId, q.err = soap.GetTableIdByName(table)
+	q.Filter = filter
+	return q
+}
+
 func (q *RTUQuery) Run() (res *QueryResponce, err error) {
 	res = new(QueryResponce)
 	if q.err != nil {
@@ -122,6 +129,13 @@ func (q *RTUQuery) Run() (res *QueryResponce, err error) {
 	case "describe":
 		res.Describe, err = q.client.SOAPClient.DescribeColumns(q.tableId)
 		return res, err
+	case "count":
+		count, err := q.client.SOAPClient.CountRowset(&soap.CountRowsetRequest{
+			P_table_hi: q.tableId,
+			Filter: *q.Filter,
+		})
+		res.Count = count.Result
+		return res, err
 	}
 	return nil, errors.New("RTUQuery run error action not found")
 }
@@ -135,6 +149,7 @@ type QueryResponce struct {
 	Insert   *soap.InsertRowsetResponce
 	Delete   *soap.DeleteRowsetResponce
 	Describe *soap.DescribeColumnResponce
+	Count    int
 }
 
 

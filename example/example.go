@@ -49,6 +49,22 @@ func main() {
 
 	*/
 
+	/* Count example
+
+	res, err := rtu.NewRTUQuery(client).Count("cdrH", &soap.Filter{
+		Type_: "cond",
+		Column: "in_ani",
+		Operator: "=",
+		Value: "1111111111",
+	}).Run()
+	if err != nil {
+		log.Println(err)
+	}
+
+	log.Printf("%v", res.Count)
+
+	*/
+
 
 }
 

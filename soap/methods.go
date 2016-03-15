@@ -3,6 +3,8 @@ package soap
 import "encoding/xml"
 
 // TODO empty request and responce for unused operations
+
+
 type emptyRequest struct {
 
 }
@@ -41,22 +43,7 @@ type SelectRowsetRequest struct {
 
 type SelectRowsetResponce struct {
 	XMLName xml.Name `xml:"http://mfisoft.ru/soap selectRowsetResponse"`
-	Result  struct {
-			XMLName   xml.Name `xml:"result"`
-			ArrayType string `xml:"http://schemas.xmlsoap.org/soap/encoding/ arrayType,attr"`
-			Type_     string `xml:"http://www.w3.org/2001/XMLSchema-instance type,attr"`
-			Rows      []struct {
-				XMLName xml.Name `xml:"item"`
-				Type_   string    `xml:"http://www.w3.org/2001/XMLSchema-instance type,attr"`
-				Items   []selectRowItem `xml:"item"`
-			} `xml:"item"`
-		} `xml:"result"`
-}
-
-type selectRowItem struct {
-	XMLName xml.Name `xml:"item"`
-	Key     string `xml:"key"`
-	Value   string `xml:"value"`
+	Result  ResponceRowResult `xml:"result"`
 }
 
 func (service *ServicePortType) SelectRowset(request *SelectRowsetRequest) (*SelectRowsetResponce, error) {
@@ -146,15 +133,12 @@ func (service *ServicePortType) DeleteRowset(request *DeleteRowsetRequest) (*Del
 type CountRowsetRequest struct {
 	XMLName    xml.Name `xml:"http://mfisoft.ru/voip/service/soap countRowset"`
 	P_table_hi string `xml:",omitempty"`
-	P_rowset   Rowset `xml:",omitempty"`
 	Filter     Filter `xml:",omitempty"`
 }
 
 type CountRowsetResponce struct {
 	XMLName xml.Name `xml:"http://mfisoft.ru/soap countRowsetResponse"`
-	Result  struct {
-			XMLName xml.Name `xml:"result"`
-		} `xml:"result"`
+	Result  int `xml:"result"`
 }
 
 func (service *ServicePortType) CountRowset(request *CountRowsetRequest) (*CountRowsetResponce, error) {
@@ -168,19 +152,8 @@ func (service *ServicePortType) CountRowset(request *CountRowsetRequest) (*Count
 }
 
 /**
- *	Unused method and structures
+ *	Describe Request method and structures
  */
-
-
-func (service *ServicePortType) GetTableByTitle(request *emptyRequest) (*emptyResponce, error) {
-	response := new(emptyResponce)
-	err := service.client.Call("", request, response)
-	if err != nil {
-		return nil, err
-	}
-
-	return response, nil
-}
 
 type DescribeColumnRequest struct {
 	XMLName    xml.Name `xml:"http://mfisoft.ru/voip/service/soap describeColumns"`
@@ -189,31 +162,30 @@ type DescribeColumnRequest struct {
 
 type DescribeColumnResponce struct {
 	XMLName xml.Name `xml:"http://mfisoft.ru/soap describeColumnsResponse"`
-	Result  struct {
-			XMLName   xml.Name `xml:"result"`
-			ArrayType string `xml:"http://schemas.xmlsoap.org/soap/encoding/ arrayType,attr"`
-			Type_     string `xml:"http://www.w3.org/2001/XMLSchema-instance type,attr"`
-			Rows      []struct {
-				XMLName xml.Name `xml:"item"`
-				Type_   string    `xml:"http://www.w3.org/2001/XMLSchema-instance type,attr"`
-				Items   []decribeItem `xml:"item"`
-			} `xml:"item"`
-		} `xml:"result"`
+	Result  ResponceRowResult `xml:"result"`
 }
-
-type decribeItem struct {
-	XMLName xml.Name `xml:"item"`
-	Key     string `xml:"key"`
-	Value   string `xml:"value"`
-}
-
-
 
 func (service *ServicePortType) DescribeColumns(request string) (*DescribeColumnResponce, error) {
 	response := new(DescribeColumnResponce)
 	req := new(DescribeColumnRequest)
 	req.P_table_hi = request
 	err := service.client.Call("", req, response)
+	if err != nil {
+		return nil, err
+	}
+
+	return response, nil
+}
+
+
+/**
+ *	Unused method and structures
+ */
+
+
+func (service *ServicePortType) GetTableByTitle(request *emptyRequest) (*emptyResponce, error) {
+	response := new(emptyResponce)
+	err := service.client.Call("", request, response)
 	if err != nil {
 		return nil, err
 	}
