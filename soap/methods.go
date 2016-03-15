@@ -2,17 +2,6 @@ package soap
 
 import "encoding/xml"
 
-// TODO empty request and responce for unused operations
-
-
-type emptyRequest struct {
-
-}
-
-type emptyResponce struct {
-
-}
-
 type ServicePortType struct {
 	client *SOAPClient
 }
@@ -52,7 +41,6 @@ func (service *ServicePortType) SelectRowset(request *SelectRowsetRequest) (*Sel
 	if err != nil {
 		return nil, err
 	}
-
 	return response, nil
 }
 
@@ -68,9 +56,7 @@ type InsertRowsetRequest struct {
 
 type InsertRowsetResponce struct {
 	XMLName xml.Name `xml:"http://mfisoft.ru/soap insertRowsetResponse"`
-	Result  struct {
-			XMLName xml.Name `xml:"result"`
-		} `xml:"result"`
+	Result  int `xml:"result"`
 }
 
 func (service *ServicePortType) InsertRowset(request *InsertRowsetRequest) (*InsertRowsetResponce, error) {
@@ -84,12 +70,23 @@ func (service *ServicePortType) InsertRowset(request *InsertRowsetRequest) (*Ins
 }
 
 /**
- *	Update Request method and structures TODO create update structures
+ *	Update Request method and structures
  */
 
+type UpdateRowsetRequest struct {
+	XMLName    xml.Name `xml:"http://mfisoft.ru/voip/service/soap updateRowset"`
+	P_table_hi string `xml:",omitempty"`
+	P_rowset   Rowset `xml:",omitempty"`
+	Filter     Filter `xml:",omitempty"`
+}
 
-func (service *ServicePortType) UpdateRowset(request *emptyRequest) (*emptyResponce, error) {
-	response := new(emptyResponce)
+type UpdateRowsetResponce struct {
+	XMLName xml.Name `xml:"http://mfisoft.ru/soap updateRowsetResponse"`
+	Result  int `xml:"result"`
+}
+
+func (service *ServicePortType) UpdateRowset(request *UpdateRowsetRequest) (*UpdateRowsetResponce, error) {
+	response := new(UpdateRowsetResponce)
 	err := service.client.Call("", request, response)
 	if err != nil {
 		return nil, err
@@ -111,9 +108,7 @@ type DeleteRowsetRequest struct {
 
 type DeleteRowsetResponce struct {
 	XMLName xml.Name `xml:"http://mfisoft.ru/soap deleteRowsetResponse"`
-	Result  struct {
-			XMLName xml.Name `xml:"result"`
-		} `xml:"result"`
+	Result  int `xml:"result"`
 }
 
 func (service *ServicePortType) DeleteRowset(request *DeleteRowsetRequest) (*DeleteRowsetResponce, error) {
@@ -180,7 +175,7 @@ func (service *ServicePortType) DescribeColumns(request string) (*DescribeColumn
 
 /**
  *	Unused method and structures
- */
+ *
 
 
 func (service *ServicePortType) GetTableByTitle(request *emptyRequest) (*emptyResponce, error) {
@@ -204,3 +199,4 @@ func (service *ServicePortType) GetColumnLookup(request *emptyRequest) (*emptyRe
 }
 
 
+*/

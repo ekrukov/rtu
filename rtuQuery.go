@@ -146,8 +146,8 @@ func (q *RTUQuery) Print() {
 
 type QueryResponce struct {
 	Select   *soap.SelectRowsetResponce
-	Insert   *soap.InsertRowsetResponce
-	Delete   *soap.DeleteRowsetResponce
+	Insert   int
+	Delete   int
 	Describe *soap.DescribeColumnResponce
 	Count    int
 }
