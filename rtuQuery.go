@@ -6,7 +6,6 @@ import (
 	"errors"
 )
 
-
 type RTUQuery struct {
 	client         *RTUClient
 	Action         string
@@ -100,6 +99,12 @@ func (q *RTUQuery) OrderBy(sort soap.Ordertype) *RTUQuery {
 	return q
 }
 
+func (q *RTUQuery) Describe(table string) *RTUQuery {
+	q.Action = "describe"
+	q.tableId, q.err = soap.GetTableIdByName(table)
+	return q
+}
+
 func (q *RTUQuery) Run() (res *QueryResponce, err error) {
 	res = new(QueryResponce)
 	if q.err != nil {
@@ -114,6 +119,9 @@ func (q *RTUQuery) Run() (res *QueryResponce, err error) {
 			Limit: q.Limit,
 		})
 		return res, err
+	case "describe":
+		res.Describe, err = q.client.SOAPClient.DescribeColumns(q.tableId)
+		return res, err
 	}
 	return nil, errors.New("RTUQuery run error action not found")
 }
@@ -123,9 +131,10 @@ func (q *RTUQuery) Print() {
 }
 
 type QueryResponce struct {
-	Select *soap.SelectRowsetResponce
-	Insert *soap.InsertRowsetResponce
-	Delete *soap.DeleteRowsetResponce
+	Select   *soap.SelectRowsetResponce
+	Insert   *soap.InsertRowsetResponce
+	Delete   *soap.DeleteRowsetResponce
+	Describe *soap.DescribeColumnResponce
 }
 
 

@@ -46,13 +46,12 @@ type SelectRowsetResponce struct {
 			ArrayType string `xml:"http://schemas.xmlsoap.org/soap/encoding/ arrayType,attr"`
 			Type_     string `xml:"http://www.w3.org/2001/XMLSchema-instance type,attr"`
 			Rows      []struct {
-					  XMLName xml.Name `xml:"item"`
-					  Type_   string    `xml:"http://www.w3.org/2001/XMLSchema-instance type,attr"`
-					  Items   []selectRowItem `xml:"item"`
-				  } `xml:"item"`
+				XMLName xml.Name `xml:"item"`
+				Type_   string    `xml:"http://www.w3.org/2001/XMLSchema-instance type,attr"`
+				Items   []selectRowItem `xml:"item"`
+			} `xml:"item"`
 		} `xml:"result"`
 }
-
 
 type selectRowItem struct {
 	XMLName xml.Name `xml:"item"`
@@ -188,8 +187,30 @@ type DescribeColumnRequest struct {
 	P_table_hi string `xml:",omitempty"`
 }
 
-func (service *ServicePortType) DescribeColumns(request string) (*emptyResponce, error) {
-	response := new(emptyResponce)
+type DescribeColumnResponce struct {
+	XMLName xml.Name `xml:"http://mfisoft.ru/soap describeColumnsResponse"`
+	Result  struct {
+			XMLName   xml.Name `xml:"result"`
+			ArrayType string `xml:"http://schemas.xmlsoap.org/soap/encoding/ arrayType,attr"`
+			Type_     string `xml:"http://www.w3.org/2001/XMLSchema-instance type,attr"`
+			Rows      []struct {
+				XMLName xml.Name `xml:"item"`
+				Type_   string    `xml:"http://www.w3.org/2001/XMLSchema-instance type,attr"`
+				Items   []decribeItem `xml:"item"`
+			} `xml:"item"`
+		} `xml:"result"`
+}
+
+type decribeItem struct {
+	XMLName xml.Name `xml:"item"`
+	Key     string `xml:"key"`
+	Value   string `xml:"value"`
+}
+
+
+
+func (service *ServicePortType) DescribeColumns(request string) (*DescribeColumnResponce, error) {
+	response := new(DescribeColumnResponce)
 	req := new(DescribeColumnRequest)
 	req.P_table_hi = request
 	err := service.client.Call("", req, response)
