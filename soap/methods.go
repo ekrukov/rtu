@@ -4,7 +4,7 @@ import "encoding/xml"
 
 type String string
 type Integer int
-type AnyType interface {}
+type AnyType interface{}
 
 type ServicePortType struct {
 	client *SOAPClient
@@ -61,8 +61,6 @@ func (service *ServicePortType) DeleteRowset(request *String) (*Integer, error) 
 	return response, nil
 }
 
-
-
 func (service *ServicePortType) CountRowset(request *String) (*Integer, error) {
 	response := new(Integer)
 	err := service.client.Call("", request, response)
@@ -84,7 +82,7 @@ func (service *ServicePortType) GetTableByTitle(request *String) (*String, error
 }
 
 type DescribeColumnRequest struct {
-	XMLName xml.Name `xml:"http://mfisoft.ru/voip/service/soap describeColumns"`
+	XMLName    xml.Name `xml:"http://mfisoft.ru/voip/service/soap describeColumns"`
 	P_table_hi string `xml:",omitempty"`
 }
 
@@ -111,31 +109,31 @@ func (service *ServicePortType) GetColumnLookup(request *String) (*AnyType, erro
 }
 
 type SelectRowsetRequest struct {
-	XMLName xml.Name `xml:"http://mfisoft.ru/voip/service/soap selectRowset"`
+	XMLName    xml.Name `xml:"http://mfisoft.ru/voip/service/soap selectRowset"`
 	P_table_hi string `xml:",omitempty"`
-	Filter Filter `xml:",omitempty"`
-	Sort Ordertype `xml:",omitempty"`
-	Limit int `xml:",omitempty"`
-	Offset int `xml:",omitempty"`
+	Filter     Filter `xml:",omitempty"`
+	Sort       Ordertype `xml:",omitempty"`
+	Limit      int `xml:",omitempty"`
+	Offset     int `xml:",omitempty"`
 }
 
 type SelectRowsetResponce struct {
-	XMLName     xml.Name `xml:"http://mfisoft.ru/soap selectRowsetResponse"`
-	Result	struct{
-			    XMLName xml.Name `xml:"result"`
-			    ArrayType string `xml:"http://schemas.xmlsoap.org/soap/encoding/ arrayType,attr"`
-			    Type_ string `xml:"http://www.w3.org/2001/XMLSchema-instance type,attr"`
-			    Item struct{
-					    XMLName     xml.Name `xml:"item"`
-					    Type_       string    `xml:"http://www.w3.org/2001/XMLSchema-instance type,attr"`
-					    Items       []selectRowsetItem `xml:"item"`
-				    } `xml:"item"`
-		    } `xml:"result"`
+	XMLName xml.Name `xml:"http://mfisoft.ru/soap selectRowsetResponse"`
+	Result  struct {
+			XMLName   xml.Name `xml:"result"`
+			ArrayType string `xml:"http://schemas.xmlsoap.org/soap/encoding/ arrayType,attr"`
+			Type_     string `xml:"http://www.w3.org/2001/XMLSchema-instance type,attr"`
+			Item      struct {
+					  XMLName xml.Name `xml:"item"`
+					  Type_   string    `xml:"http://www.w3.org/2001/XMLSchema-instance type,attr"`
+					  Items   []selectRowsetItem `xml:"item"`
+				  } `xml:"item"`
+		} `xml:"result"`
 }
 
 type selectRowsetItem struct {
-	XMLName     xml.Name `xml:"item"`
-	Key	    string `xml:"key"`
-	Value	    string `xml:"value"`
+	XMLName xml.Name `xml:"item"`
+	Key     string `xml:"key"`
+	Value   string `xml:"value"`
 }
 

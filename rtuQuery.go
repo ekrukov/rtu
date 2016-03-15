@@ -1,6 +1,5 @@
 package rtu
 
-
 import (
 	"github.com/ekrukov/rtu/soap"
 	"log"
@@ -8,20 +7,20 @@ import (
 )
 
 type RTUQuery struct {
-	client *RTUClient
-	Action string
-	TableName string
-	tableId string
-	Filter *soap.Filter
-	Rowset *soap.Rowset
-	Sort soap.Ordertype
-	Limit int
-	Offset int
+	client         *RTUClient
+	Action         string
+	TableName      string
+	tableId        string
+	Filter         *soap.Filter
+	Rowset         *soap.Rowset
+	Sort           soap.Ordertype
+	Limit          int
+	Offset         int
 	InsertTemplate *soap.Template
-	err error
+	err            error
 }
 
-func NewRTUQuery(c *RTUClient) *RTUQuery{
+func NewRTUQuery(c *RTUClient) *RTUQuery {
 	return &RTUQuery{
 		client: c,
 		Sort: soap.OrdertypeAsc,
@@ -30,29 +29,29 @@ func NewRTUQuery(c *RTUClient) *RTUQuery{
 	}
 }
 
-func (q *RTUQuery) Select() *RTUQuery{
+func (q *RTUQuery) Select() *RTUQuery {
 	q.Action = "select"
 	return q
 }
 
-func (q *RTUQuery) Update(table string) *RTUQuery{
+func (q *RTUQuery) Update(table string) *RTUQuery {
 	q.Action = "update"
 	q.tableId, q.err = soap.GetTableIdByName(table)
 	return q
 }
 
-func (q *RTUQuery) Delete() *RTUQuery{
+func (q *RTUQuery) Delete() *RTUQuery {
 	q.Action = "delete"
 	return q
 }
 
-func (q *RTUQuery) Insert(template *soap.Template) *RTUQuery{
+func (q *RTUQuery) Insert(template *soap.Template) *RTUQuery {
 	q.Action = "insert"
 	q.InsertTemplate = template
 	return q
 }
 
-func (q *RTUQuery) Set(rowset *soap.Rowset) *RTUQuery{
+func (q *RTUQuery) Set(rowset *soap.Rowset) *RTUQuery {
 	if q.Action != "update" {
 		errorString := "RTUQuery builder error, set without update"
 		q.err = errors.New(errorString)
@@ -63,7 +62,7 @@ func (q *RTUQuery) Set(rowset *soap.Rowset) *RTUQuery{
 	return q
 }
 
-func (q *RTUQuery) From(table string) *RTUQuery{
+func (q *RTUQuery) From(table string) *RTUQuery {
 	if q.Action == "select" || q.Action == "delete" {
 		q.tableId, q.err = soap.GetTableIdByName(table)
 	} else {
@@ -74,7 +73,7 @@ func (q *RTUQuery) From(table string) *RTUQuery{
 	return q
 }
 
-func (q *RTUQuery) Into(table string) *RTUQuery{
+func (q *RTUQuery) Into(table string) *RTUQuery {
 	if q.Action == "insert" {
 		q.tableId, q.err = soap.GetTableIdByName(table)
 	} else {
@@ -85,17 +84,17 @@ func (q *RTUQuery) Into(table string) *RTUQuery{
 	return q
 }
 
-func (q *RTUQuery) Values(rowset *soap.Rowset) *RTUQuery{
+func (q *RTUQuery) Values(rowset *soap.Rowset) *RTUQuery {
 	q.Rowset = rowset
 	return q
 }
 
-func (q *RTUQuery) Where(filter *soap.Filter) *RTUQuery{
+func (q *RTUQuery) Where(filter *soap.Filter) *RTUQuery {
 	q.Filter = filter
 	return q
 }
 
-func (q *RTUQuery) OrderBy(sort soap.Ordertype) *RTUQuery{
+func (q *RTUQuery) OrderBy(sort soap.Ordertype) *RTUQuery {
 	q.Sort = sort
 	return q
 }
@@ -114,10 +113,10 @@ func (q *RTUQuery) Run() (res interface{}, err error) {
 		})
 		return res, err
 	}
-	return nil , errors.New("RTUQuery run error action not found")
+	return nil, errors.New("RTUQuery run error action not found")
 }
 
-func (q *RTUQuery) Print(){
+func (q *RTUQuery) Print() {
 	log.Printf("%+v", q)
 }
 

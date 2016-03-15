@@ -4,21 +4,20 @@ import (
 	"encoding/xml"
 )
 
-
 type SOAPEnvelope struct {
 	XMLName xml.Name `xml:"http://schemas.xmlsoap.org/soap/envelope/ Envelope"`
-	Header SOAPHeader
-	Body SOAPBody
+	Header  SOAPHeader
+	Body    SOAPBody
 }
 
 type SOAPHeader struct {
 	XMLName xml.Name `xml:"http://schemas.xmlsoap.org/soap/envelope/ Header"`
-	Auth SOAPAuthHeader
+	Auth    SOAPAuthHeader
 }
 
 type SOAPAuthHeader struct {
-	XMLName xml.Name `xml:"http://mfisoft.ru/auth Auth"`
-	Login string `xml:",omitempty"`
+	XMLName  xml.Name `xml:"http://mfisoft.ru/auth Auth"`
+	Login    string `xml:",omitempty"`
 	Password string `xml:",omitempty"`
 }
 
@@ -27,14 +26,13 @@ type SOAPAuth struct {
 	Password string
 }
 
-
 type SOAPFault struct {
 	XMLName xml.Name `xml:"http://schemas.xmlsoap.org/soap/envelope/ Fault"`
 
-	Code   string `xml:"faultcode,omitempty"`
-	String string `xml:"faultstring,omitempty"`
-	Actor  string `xml:"faultactor,omitempty"`
-	Detail string `xml:"detail,omitempty"`
+	Code    string `xml:"faultcode,omitempty"`
+	String  string `xml:"faultstring,omitempty"`
+	Actor   string `xml:"faultactor,omitempty"`
+	Detail  string `xml:"detail,omitempty"`
 }
 
 func (f *SOAPFault) Error() string {
@@ -54,8 +52,8 @@ func (b *SOAPBody) UnmarshalXML(d *xml.Decoder, start xml.StartElement) error {
 	}
 
 	var (
-		token    xml.Token
-		err      error
+		token xml.Token
+		err error
 		consumed bool
 	)
 

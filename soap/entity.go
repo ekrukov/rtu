@@ -23,22 +23,22 @@ type Row struct {
 type Column struct {
 	XMLName xml.Name `xml:"http://mfisoft.ru/voip/service/soap column"`
 
-	Name string `xml:"name,omitempty"`
+	Name    string `xml:"name,omitempty"`
 
-	Value string `xml:"value,omitempty"`
+	Value   string `xml:"value,omitempty"`
 }
 
 type Sort struct {
 	XMLName xml.Name `xml:"http://mfisoft.ru/voip/service/soap sort"`
-	Order *Ordertype
+	Order   *Ordertype
 }
 
 type Sortitem struct {
 	XMLName xml.Name `xml:"http://mfisoft.ru/voip/service/soap sort_item"`
 
-	Column string `xml:"column,omitempty"`
+	Column  string `xml:"column,omitempty"`
 
-	Dir *Ordertype `xml:"dir,omitempty"`
+	Dir     *Ordertype `xml:"dir,omitempty"`
 }
 
 type Filterchildsarr struct {
@@ -46,16 +46,16 @@ type Filterchildsarr struct {
 }
 
 type Filter struct {
-	XMLName xml.Name `xml:"http://mfisoft.ru/voip/service/soap filter"`
+	XMLName  xml.Name `xml:"http://mfisoft.ru/voip/service/soap filter"`
 
-	Type_ string `xml:"type,omitempty"`
+	Type_    string `xml:"type,omitempty"`
 
-	Column string `xml:"column,omitempty"`
+	Column   string `xml:"column,omitempty"`
 
 	Operator string `xml:"operator,omitempty"`
 
-	Value string `xml:"value,omitempty"`
+	Value    string `xml:"value,omitempty"`
 
-	Childs *Filterchildsarr //`xml:"childs,omitempty"`
+	Childs   *Filterchildsarr //`xml:"childs,omitempty"`
 }
 

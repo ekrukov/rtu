@@ -1,6 +1,5 @@
 package soap
 
-
 import (
 	"bytes"
 	"crypto/tls"

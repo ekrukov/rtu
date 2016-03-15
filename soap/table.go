@@ -13,7 +13,7 @@ var tableIds = map[string]string{
 	"cdrA": "02.2204.01",
 }
 
-func GetTableIdByName(n string) (id string , err error){
+func GetTableIdByName(n string) (id string, err error) {
 	if id, ok := tableIds[n]; ok {
 		return id, nil
 	} else {
