@@ -8,15 +8,15 @@ import (
 
 type RTUQuery struct {
 	client         *soap.SOAPService
-	Action         string
-	TableName      string
+	action         string
+	tableName      string
 	tableId        string
-	Filter         map[string]string
-	Rowset         []map[string]string
-	Sort           soap.Ordertype
-	Limit          int
-	Offset         int
-	InsertTemplate *soap.Template
+	filter         map[string]string
+	rowset         []map[string]string
+	sort           soap.Ordertype
+	limit          int
+	offset         int
+	insertTemplate *soap.Template
 	err            error
 }
 
@@ -24,48 +24,48 @@ func NewRTUQuery(s, l, p string) *RTUQuery {
 	clientAuth := &soap.SOAPAuth{Login: l, Password: p}
 	return &RTUQuery{
 		client: soap.NewSOAPService("https://" + s + "/service/service.php?soap", true, clientAuth),
-		Sort: soap.OrdertypeAsc,
-		Limit: 1000,
-		Offset: 0,
+		sort: soap.OrdertypeAsc,
+		limit: 1000,
+		offset: 0,
 	}
 }
 
 func (q *RTUQuery) Select() *RTUQuery {
-	q.Action = "select"
+	q.action = "select"
 	return q
 }
 
 func (q *RTUQuery) Update(table string) *RTUQuery {
-	q.Action = "update"
+	q.action = "update"
 	q.tableId, q.err = soap.GetTableIdByName(table)
 	return q
 }
 
 func (q *RTUQuery) Delete() *RTUQuery {
-	q.Action = "delete"
+	q.action = "delete"
 	return q
 }
 
 //TODO template as in param => q.InsertTemplate
 
 func (q *RTUQuery) Insert() *RTUQuery {
-	q.Action = "insert"
+	q.action = "insert"
 	return q
 }
 
 func (q *RTUQuery) Set(rowset []map[string]string) *RTUQuery {
-	if q.Action != "update" {
+	if q.action != "update" {
 		errorString := "RTUQuery builder error, set without update"
 		q.err = errors.New(errorString)
 		log.Fatal(errorString)
 	} else {
-		q.Rowset = rowset
+		q.rowset = rowset
 	}
 	return q
 }
 
 func (q *RTUQuery) From(table string) *RTUQuery {
-	if q.Action == "select" || q.Action == "delete" {
+	if q.action == "select" || q.action == "delete" {
 		q.tableId, q.err = soap.GetTableIdByName(table)
 	} else {
 		errorString := "RTUQuery builder error, from without select or delete"
@@ -76,7 +76,7 @@ func (q *RTUQuery) From(table string) *RTUQuery {
 }
 
 func (q *RTUQuery) Into(table string) *RTUQuery {
-	if q.Action == "insert" {
+	if q.action == "insert" {
 		q.tableId, q.err = soap.GetTableIdByName(table)
 	} else {
 		errorString := "RTUQuery builder error, into without insert"
@@ -87,30 +87,30 @@ func (q *RTUQuery) Into(table string) *RTUQuery {
 }
 
 func (q *RTUQuery) Values(rowset []map[string]string) *RTUQuery {
-	q.Rowset = rowset
+	q.rowset = rowset
 	return q
 }
 
 func (q *RTUQuery) Where(filter map[string]string) *RTUQuery {
-	q.Filter = filter
+	q.filter = filter
 	return q
 }
 
 func (q *RTUQuery) OrderBy(sort soap.Ordertype) *RTUQuery {
-	q.Sort = sort
+	q.sort = sort
 	return q
 }
 
 func (q *RTUQuery) Describe(table string) *RTUQuery {
-	q.Action = "describe"
+	q.action = "describe"
 	q.tableId, q.err = soap.GetTableIdByName(table)
 	return q
 }
 
 func (q *RTUQuery) Count(table string, filter map[string]string) *RTUQuery {
-	q.Action = "count"
+	q.action = "count"
 	q.tableId, q.err = soap.GetTableIdByName(table)
-	q.Filter = filter
+	q.filter = filter
 	return q
 }
 
@@ -119,17 +119,17 @@ func (q *RTUQuery) Run() (res *QueryResponce, err error) {
 	if q.err != nil {
 		return nil, q.err
 	}
-	switch q.Action {
+	switch q.action {
 	case "select":
-		filter, err := soap.MapToFilter(q.Filter)
+		filter, err := soap.MapToFilter(q.filter)
 		if err != nil {
 			return nil, err
 		}
 		res.Select, err = q.client.SelectRowset(&soap.SelectRowsetRequest{
 			P_table_hi: q.tableId,
 			Filter: *filter,
-			Sort: q.Sort,
-			Limit: q.Limit,
+			Sort: q.sort,
+			Limit: q.limit,
 		})
 		if err != nil {
 			return nil, err
@@ -142,7 +142,7 @@ func (q *RTUQuery) Run() (res *QueryResponce, err error) {
 			return nil, err
 		}
 	case "count":
-		filter, err := soap.MapToFilter(q.Filter)
+		filter, err := soap.MapToFilter(q.filter)
 		if err != nil {
 			return nil, err
 		}
@@ -155,7 +155,7 @@ func (q *RTUQuery) Run() (res *QueryResponce, err error) {
 		}
 		res.Count = count.Result
 	case "insert":
-		rowset, err := soap.MapsToRowset(q.Rowset)
+		rowset, err := soap.MapsToRowset(q.rowset)
 		if err != nil {
 			return nil, err
 		}
@@ -168,11 +168,11 @@ func (q *RTUQuery) Run() (res *QueryResponce, err error) {
 		}
 		res.Insert = insert.Result
 	case "update":
-		filter, err := soap.MapToFilter(q.Filter)
+		filter, err := soap.MapToFilter(q.filter)
 		if err != nil {
 			return nil, err
 		}
-		rowset, err := soap.MapsToRowset(q.Rowset)
+		rowset, err := soap.MapsToRowset(q.rowset)
 		if err != nil {
 			return nil, err
 		}
