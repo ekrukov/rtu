@@ -126,10 +126,8 @@ func (q *RTUQuery) Run() (res *QueryResponce, err error) {
 			Sort: q.Sort,
 			Limit: q.Limit,
 		})
-		return res, err
 	case "describe":
 		res.Describe, err = q.client.SOAPClient.DescribeColumns(q.tableId)
-		return res, err
 	case "count":
 		count, err := q.client.SOAPClient.CountRowset(&soap.CountRowsetRequest{
 			P_table_hi: q.tableId,
@@ -139,7 +137,6 @@ func (q *RTUQuery) Run() (res *QueryResponce, err error) {
 			return nil, err
 		}
 		res.Count = count.Result
-		return res, nil
 	case "insert":
 		insert, err := q.client.SOAPClient.InsertRowset(&soap.InsertRowsetRequest{
 			P_table_hi: q.tableId,
@@ -149,9 +146,20 @@ func (q *RTUQuery) Run() (res *QueryResponce, err error) {
 			return nil, err
 		}
 		res.Insert = insert.Result
-		return res, nil
+	case "update":
+		update, err := q.client.SOAPClient.UpdateRowset(&soap.UpdateRowsetRequest{
+			P_table_hi: q.tableId,
+			P_rowset: *q.Rowset,
+			Filter: *q.Filter,
+		})
+		if err != nil {
+			return nil, err
+		}
+		res.Update = update.Result
+	default:
+		err = errors.New("RTUQuery run error action not found")
 	}
-	return nil, errors.New("RTUQuery run error action not found")
+	return res, err
 }
 
 func (q *RTUQuery) Print() {
@@ -159,10 +167,11 @@ func (q *RTUQuery) Print() {
 }
 
 type QueryResponce struct {
+	Describe *soap.DescribeColumnResponce
 	Select   *soap.SelectRowsetResponce
 	Insert   int
 	Delete   int
-	Describe *soap.DescribeColumnResponce
+	Update	 int
 	Count    int
 }
 

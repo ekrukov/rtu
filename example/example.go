@@ -87,6 +87,32 @@ func main() {
 	log.Printf("%v", res.Insert)
 
 	*/
+
+	/*  Update example
+
+	rowsetMap := []map[string]string {
+		0: {
+			"priority" : "101",
+		},
+	}
+	rowset, err := soap.MapsToRowset(&rowsetMap)
+	if err != nil {
+		log.Println(err)
+		return
+	}
+	res, err := rtu.NewRTUQuery(client).Update("prerouting").Set(rowset).Where(&soap.Filter{
+		Type_: "cond",
+		Column: "rule_name",
+		Operator: "=",
+		Value: "testrule",
+	}).Run()
+
+	if err != nil {
+		log.Println(err)
+		return
+	}
+	log.Printf("%v", res.Update)
+	*/
 }
 
 

@@ -26,7 +26,7 @@ func MapToRow(m *map[string]string) (r *Row, e error) {
 
 func MapsToRowset(m *[]map[string]string) (r *Rowset, e error) {
 	rows := []Row{}
-	for _, row :=range *m {
+	for _, row := range *m {
 		rowMap, e := MapToRow(&row)
 		rows = append(rows, *rowMap)
 		if e != nil {
