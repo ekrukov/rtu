@@ -24,6 +24,19 @@ func MapToRow(m *map[string]string) (r *Row, e error) {
 	return r, e
 }
 
+func MapsToRowset(m *[]map[string]string) (r *Rowset, e error) {
+	rows := []Row{}
+	for _, row :=range *m {
+		rowMap, e := MapToRow(&row)
+		rows = append(rows, *rowMap)
+		if e != nil {
+			return nil, e
+		}
+	}
+	r = &Rowset{Rows: rows}
+	return r, e
+}
+
 // TODO XML attr not in use now
 
 
