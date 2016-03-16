@@ -16,13 +16,12 @@ func main() {
 
 	/* Select example */
 
-	filterMap := map[string]string {
+	filter := map[string]string {
 		"type" : "cond",
 		"column" : "in_ani",
 		"operator" : "=",
 		"value" : "11111111111",
 	}
-	filter, err := soap.MapToFilter(filterMap)
 
 	res, err := rtu.NewRTUQuery(client).Select().From("cdrH").Where(filter).Run()
 	if err != nil {
@@ -51,13 +50,12 @@ func main() {
 
 	/* Count example */
 
-	filterMap = map[string]string {
+	filter = map[string]string {
 		"type" : "cond",
 		"column" : "in_ani",
 		"operator" : "=",
 		"value" : "11111111111",
 	}
-	filter, err = soap.MapToFilter(filterMap)
 
 	res, err = rtu.NewRTUQuery(client).Count("cdrH", filter).Run()
 	if err != nil {
@@ -70,7 +68,7 @@ func main() {
 
 	/* Insert example */
 
-	rowsetMap := []map[string]string {
+	rowset := []map[string]string {
 		0: {
 			"rule_name" : "testrule",
 			"priority" : "100",
@@ -81,12 +79,7 @@ func main() {
 			"dnis_exclude" : "1111111111[0-9]",
 		},
 	}
-	rowset, err := soap.MapsToRowset(&rowsetMap)
-	if err != nil {
-		log.Println(err)
-		return
-	}
-	res, err = rtu.NewRTUQuery(client).Insert().Into("prerouting").Values(rowset).Run()
+	res, err = rtu.NewRTUQuery(client).Insert().Into("prerouting").Values(&rowset).Run()
 	if err != nil {
 		log.Println(err)
 		return
@@ -95,29 +88,20 @@ func main() {
 
 	/*  Update example */
 
-	rowsetMap = []map[string]string {
+	rowset = []map[string]string {
 		0: {
-			"priority" : "103",
+			"priority" : "105",
 		},
 	}
-	rowset, err = soap.MapsToRowset(&rowsetMap)
-	if err != nil {
-		log.Println(err)
-		return
-	}
-	filterMap = map[string]string {
+
+	filter = map[string]string {
 		"type" : "cond",
 		"column" : "rule_name",
 		"operator" : "=",
 		"value" : "testrule",
 	}
-	filter, err = soap.MapToFilter(filterMap)
-	if err != nil {
-		log.Println(err)
-		return
-	}
 
-	res, err = rtu.NewRTUQuery(client).Update("prerouting").Set(rowset).Where(filter).Run()
+	res, err = rtu.NewRTUQuery(client).Update("prerouting").Set(&rowset).Where(filter).Run()
 
 	if err != nil {
 		log.Println(err)

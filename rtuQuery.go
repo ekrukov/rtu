@@ -11,8 +11,8 @@ type RTUQuery struct {
 	Action         string
 	TableName      string
 	tableId        string
-	Filter         *soap.Filter
-	Rowset         *soap.Rowset
+	Filter         map[string]string
+	Rowset         *[]map[string]string
 	Sort           soap.Ordertype
 	Limit          int
 	Offset         int
@@ -52,7 +52,7 @@ func (q *RTUQuery) Insert() *RTUQuery {
 	return q
 }
 
-func (q *RTUQuery) Set(rowset *soap.Rowset) *RTUQuery {
+func (q *RTUQuery) Set(rowset *[]map[string]string) *RTUQuery {
 	if q.Action != "update" {
 		errorString := "RTUQuery builder error, set without update"
 		q.err = errors.New(errorString)
@@ -85,12 +85,12 @@ func (q *RTUQuery) Into(table string) *RTUQuery {
 	return q
 }
 
-func (q *RTUQuery) Values(rowset *soap.Rowset) *RTUQuery {
+func (q *RTUQuery) Values(rowset *[]map[string]string) *RTUQuery {
 	q.Rowset = rowset
 	return q
 }
 
-func (q *RTUQuery) Where(filter *soap.Filter) *RTUQuery {
+func (q *RTUQuery) Where(filter map[string]string) *RTUQuery {
 	q.Filter = filter
 	return q
 }
@@ -106,7 +106,7 @@ func (q *RTUQuery) Describe(table string) *RTUQuery {
 	return q
 }
 
-func (q *RTUQuery) Count(table string, filter *soap.Filter) *RTUQuery {
+func (q *RTUQuery) Count(table string, filter map[string]string) *RTUQuery {
 	q.Action = "count"
 	q.tableId, q.err = soap.GetTableIdByName(table)
 	q.Filter = filter
@@ -120,37 +120,57 @@ func (q *RTUQuery) Run() (res *QueryResponce, err error) {
 	}
 	switch q.Action {
 	case "select":
+		filter, err := soap.MapToFilter(q.Filter)
+		if err != nil {
+			return nil, err
+		}
 		res.Select, err = q.client.SOAPClient.SelectRowset(&soap.SelectRowsetRequest{
 			P_table_hi: q.tableId,
-			Filter: *q.Filter,
+			Filter: *filter,
 			Sort: q.Sort,
 			Limit: q.Limit,
 		})
 	case "describe":
 		res.Describe, err = q.client.SOAPClient.DescribeColumns(q.tableId)
 	case "count":
+		filter, err := soap.MapToFilter(q.Filter)
+		if err != nil {
+			return nil, err
+		}
 		count, err := q.client.SOAPClient.CountRowset(&soap.CountRowsetRequest{
 			P_table_hi: q.tableId,
-			Filter: *q.Filter,
+			Filter: *filter,
 		})
 		if err != nil {
 			return nil, err
 		}
 		res.Count = count.Result
 	case "insert":
+		rowset, err := soap.MapsToRowset(q.Rowset)
+		if err != nil {
+			return nil, err
+		}
 		insert, err := q.client.SOAPClient.InsertRowset(&soap.InsertRowsetRequest{
 			P_table_hi: q.tableId,
-			P_rowset: *q.Rowset,
+			P_rowset: *rowset,
 		})
 		if err != nil {
 			return nil, err
 		}
 		res.Insert = insert.Result
 	case "update":
+		filter, err := soap.MapToFilter(q.Filter)
+		if err != nil {
+			return nil, err
+		}
+		rowset, err := soap.MapsToRowset(q.Rowset)
+		if err != nil {
+			return nil, err
+		}
 		update, err := q.client.SOAPClient.UpdateRowset(&soap.UpdateRowsetRequest{
 			P_table_hi: q.tableId,
-			P_rowset: *q.Rowset,
-			Filter: *q.Filter,
+			P_rowset: *rowset,
+			Filter: *filter,
 		})
 		if err != nil {
 			return nil, err
