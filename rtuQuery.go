@@ -135,6 +135,9 @@ func (q *RTUQuery) Run() (res *QueryResponce, err error) {
 		}
 	case "describe":
 		res.Describe, err = q.client.SOAPClient.DescribeColumns(q.tableId)
+		if err != nil {
+			return nil, err
+		}
 	case "count":
 		filter, err := soap.MapToFilter(q.Filter)
 		if err != nil {
