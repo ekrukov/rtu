@@ -2,6 +2,7 @@ package soap
 
 import (
 	"encoding/xml"
+	"errors"
 )
 
 type Ordertype string
@@ -11,6 +12,22 @@ const (
 
 	OrdertypeDesc Ordertype = "desc"
 )
+
+func MapToFilter(m map[string]string) (f *Filter, e error) {
+	f = new(Filter)
+	f.Type_, e = checkInMap(m, "type")
+	f.Column, e = checkInMap(m, "column")
+	f.Operator, e = checkInMap(m, "operator")
+	f.Value, e = checkInMap(m, "value")
+	return f, e
+}
+
+func checkInMap(m map[string]string, key string) (value string, err error) {
+	if value, ok := m[key]; ok {
+		return value, nil
+	}
+	return "", errors.New("Unknown field in filter map")
+}
 
 func MapToRow(m *map[string]string) (r *Row, e error) {
 	columnMap := []Column{}

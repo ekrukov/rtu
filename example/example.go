@@ -13,14 +13,18 @@ var serverPass string = "superpasswd"
 func main() {
 	client := rtu.NewRTUClient(serverName, serverLogin, serverPass)
 
+
 	/* Select example
 
-	res, err := rtu.NewRTUQuery(client).Select().From("cdrH").Where(&soap.Filter{
-		Type_: "cond",
-		Column: "in_ani",
-		Operator: "=",
-		Value: "1111111111",
-	}).Run()
+	filterMap := map[string]string {
+		"type" : "cond",
+		"column" : "in_ani",
+		"operator" : "=",
+		"value" : "11111111111",
+	}
+	filter, err := soap.MapToFilter(filterMap)
+
+	res, err := rtu.NewRTUQuery(client).Select().From("cdrH").Where(filter).Run()
 	if err != nil {
 		log.Println(err)
 	}
@@ -33,7 +37,7 @@ func main() {
 
 	*/
 
-	/*Describe example
+	/* Describe example
 
 	res, err := rtu.NewRTUQuery(client).Describe("cdrH").Run()
 	if err != nil {
@@ -46,25 +50,27 @@ func main() {
 		}
 		log.Printf("")
 	}
-
 	*/
 
 	/* Count example
 
-	res, err := rtu.NewRTUQuery(client).Count("cdrH", &soap.Filter{
-		Type_: "cond",
-		Column: "in_ani",
-		Operator: "=",
-		Value: "1111111111",
-	}).Run()
+	filterMap := map[string]string {
+		"type" : "cond",
+		"column" : "in_ani",
+		"operator" : "=",
+		"value" : "11111111111",
+	}
+	filter, err := soap.MapToFilter(filterMap)
+
+	res, err := rtu.NewRTUQuery(client).Count("cdrH", filter).Run()
 	if err != nil {
 		log.Println(err)
 	}
 
 	log.Printf("%v", res.Count)
 
-	*/
 
+	*/
 	/* Insert example
 
 	rowsetMap := []map[string]string {
@@ -75,24 +81,27 @@ func main() {
 			"action" : "2",
 			"description" : "testdesc",
 			"ani_pattern" : "11111111111",
-			"dnis_exclude" : "1800.{7}",
+			"dnis_exclude" : "1111111111[0-9]",
 		},
 	}
 	rowset, err := soap.MapsToRowset(&rowsetMap)
+	if err != nil {
+		log.Println(err)
+		return
+	}
 	res, err := rtu.NewRTUQuery(client).Insert().Into("prerouting").Values(rowset).Run()
 	if err != nil {
 		log.Println(err)
 		return
 	}
 	log.Printf("%v", res.Insert)
-
 	*/
 
 	/*  Update example
 
 	rowsetMap := []map[string]string {
 		0: {
-			"priority" : "101",
+			"priority" : "103",
 		},
 	}
 	rowset, err := soap.MapsToRowset(&rowsetMap)
@@ -100,12 +109,19 @@ func main() {
 		log.Println(err)
 		return
 	}
-	res, err := rtu.NewRTUQuery(client).Update("prerouting").Set(rowset).Where(&soap.Filter{
-		Type_: "cond",
-		Column: "rule_name",
-		Operator: "=",
-		Value: "testrule",
-	}).Run()
+	filterMap := map[string]string {
+		"type" : "cond",
+		"column" : "rule_name",
+		"operator" : "=",
+		"value" : "testrule",
+	}
+	filter, err := soap.MapToFilter(filterMap)
+	if err != nil {
+		log.Println(err)
+		return
+	}
+
+	res, err := rtu.NewRTUQuery(client).Update("prerouting").Set(rowset).Where(filter).Run()
 
 	if err != nil {
 		log.Println(err)
