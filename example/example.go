@@ -10,19 +10,20 @@ var serverLogin string = "admin"
 var serverPass string = "superpasswd"
 
 func main() {
-	client := rtu.NewRTUClient(serverName, serverLogin, serverPass)
+
+	query := rtu.NewRTUQuery(serverName, serverLogin, serverPass)
 
 
 	/* Select example */
 
-	filter := map[string]string {
+	filter := map[string]string{
 		"type" : "cond",
 		"column" : "in_ani",
 		"operator" : "=",
 		"value" : "11111111111",
 	}
 
-	res, err := rtu.NewRTUQuery(client).Select().From("cdrH").Where(filter).Run()
+	res, err := query.Select().From("cdrH").Where(filter).Run()
 	if err != nil {
 		log.Println(err)
 	}
@@ -35,7 +36,7 @@ func main() {
 
 	/* Describe example */
 
-	res, err = rtu.NewRTUQuery(client).Describe("cdrH").Run()
+	res, err = query.Describe("cdrH").Run()
 	if err != nil {
 		log.Println(err)
 	}
@@ -49,14 +50,14 @@ func main() {
 
 	/* Count example */
 
-	filter = map[string]string {
+	filter = map[string]string{
 		"type" : "cond",
 		"column" : "in_ani",
 		"operator" : "=",
 		"value" : "11111111111",
 	}
 
-	res, err = rtu.NewRTUQuery(client).Count("cdrH", filter).Run()
+	res, err = query.Count("cdrH", filter).Run()
 	if err != nil {
 		log.Println(err)
 	}
@@ -67,7 +68,7 @@ func main() {
 
 	/* Insert example */
 
-	rowset := []map[string]string {
+	rowset := []map[string]string{
 		0: {
 			"rule_name" : "testrule",
 			"priority" : "100",
@@ -78,7 +79,7 @@ func main() {
 			"dnis_exclude" : "1111111111[0-9]",
 		},
 	}
-	res, err = rtu.NewRTUQuery(client).Insert().Into("prerouting").Values(&rowset).Run()
+	res, err = query.Insert().Into("prerouting").Values(&rowset).Run()
 	if err != nil {
 		log.Println(err)
 		return
@@ -87,20 +88,20 @@ func main() {
 
 	/*  Update example */
 
-	rowset = []map[string]string {
+	rowset = []map[string]string{
 		0: {
 			"priority" : "105",
 		},
 	}
 
-	filter = map[string]string {
+	filter = map[string]string{
 		"type" : "cond",
 		"column" : "rule_name",
 		"operator" : "=",
 		"value" : "testrule",
 	}
 
-	res, err = rtu.NewRTUQuery(client).Update("prerouting").Set(&rowset).Where(filter).Run()
+	res, err = query.Update("prerouting").Set(&rowset).Where(filter).Run()
 
 	if err != nil {
 		log.Println(err)

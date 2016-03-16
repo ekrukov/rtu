@@ -28,7 +28,6 @@ type SOAPAuth struct {
 
 type SOAPFault struct {
 	XMLName xml.Name `xml:"http://schemas.xmlsoap.org/soap/envelope/ Fault"`
-
 	Code    string `xml:"faultcode,omitempty"`
 	String  string `xml:"faultstring,omitempty"`
 	Actor   string `xml:"faultactor,omitempty"`
@@ -41,7 +40,6 @@ func (f *SOAPFault) Error() string {
 
 type SOAPBody struct {
 	XMLName xml.Name `xml:"http://schemas.xmlsoap.org/soap/envelope/ Body"`
-
 	Fault   *SOAPFault  `xml:",omitempty"`
 	Content interface{} `xml:",omitempty"`
 }

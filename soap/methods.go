@@ -2,17 +2,17 @@ package soap
 
 import "encoding/xml"
 
-type ServicePortType struct {
+type SOAPService struct {
 	client *SOAPClient
 }
 
-func NewServicePortType(url string, tls bool, auth *SOAPAuth) *ServicePortType {
+func NewSOAPService(url string, tls bool, auth *SOAPAuth) *SOAPService {
 	if url == "" {
 		url = ""
 	}
 	client := NewSOAPClient(url, tls, auth)
 
-	return &ServicePortType{
+	return &SOAPService{
 		client: client,
 	}
 }
@@ -35,7 +35,7 @@ type SelectRowsetResponce struct {
 	Result  ResponceRowset `xml:"result"`
 }
 
-func (service *ServicePortType) SelectRowset(request *SelectRowsetRequest) (*SelectRowsetResponce, error) {
+func (service *SOAPService) SelectRowset(request *SelectRowsetRequest) (*SelectRowsetResponce, error) {
 	response := new(SelectRowsetResponce)
 	err := service.client.Call("", request, response)
 	if err != nil {
@@ -59,7 +59,7 @@ type InsertRowsetResponce struct {
 	Result  int `xml:"result"`
 }
 
-func (service *ServicePortType) InsertRowset(request *InsertRowsetRequest) (*InsertRowsetResponce, error) {
+func (service *SOAPService) InsertRowset(request *InsertRowsetRequest) (*InsertRowsetResponce, error) {
 	response := new(InsertRowsetResponce)
 	err := service.client.Call("", request, response)
 	if err != nil {
@@ -85,7 +85,7 @@ type UpdateRowsetResponce struct {
 	Result  int `xml:"result"`
 }
 
-func (service *ServicePortType) UpdateRowset(request *UpdateRowsetRequest) (*UpdateRowsetResponce, error) {
+func (service *SOAPService) UpdateRowset(request *UpdateRowsetRequest) (*UpdateRowsetResponce, error) {
 	response := new(UpdateRowsetResponce)
 	err := service.client.Call("", request, response)
 	if err != nil {
@@ -111,7 +111,7 @@ type DeleteRowsetResponce struct {
 	Result  int `xml:"result"`
 }
 
-func (service *ServicePortType) DeleteRowset(request *DeleteRowsetRequest) (*DeleteRowsetResponce, error) {
+func (service *SOAPService) DeleteRowset(request *DeleteRowsetRequest) (*DeleteRowsetResponce, error) {
 	response := new(DeleteRowsetResponce)
 	err := service.client.Call("", request, response)
 	if err != nil {
@@ -136,7 +136,7 @@ type CountRowsetResponce struct {
 	Result  int `xml:"result"`
 }
 
-func (service *ServicePortType) CountRowset(request *CountRowsetRequest) (*CountRowsetResponce, error) {
+func (service *SOAPService) CountRowset(request *CountRowsetRequest) (*CountRowsetResponce, error) {
 	response := new(CountRowsetResponce)
 	err := service.client.Call("", request, response)
 	if err != nil {
@@ -160,11 +160,9 @@ type DescribeColumnResponce struct {
 	Result  ResponceRowset `xml:"result"`
 }
 
-func (service *ServicePortType) DescribeColumns(request string) (*DescribeColumnResponce, error) {
+func (service *SOAPService) DescribeColumns(request *DescribeColumnRequest) (*DescribeColumnResponce, error) {
 	response := new(DescribeColumnResponce)
-	req := new(DescribeColumnRequest)
-	req.P_table_hi = request
-	err := service.client.Call("", req, response)
+	err := service.client.Call("", request, response)
 	if err != nil {
 		return nil, err
 	}
@@ -175,11 +173,20 @@ func (service *ServicePortType) DescribeColumns(request string) (*DescribeColumn
 
 /**
  *	Unused method and structures
- *
+ */
 
+type GetTableByTitleRequest struct {
+	XMLName    xml.Name `xml:"http://mfisoft.ru/voip/service/soap getTableByTitle"`
+	P_table_hi string `xml:",omitempty"`
+}
 
-func (service *ServicePortType) GetTableByTitle(request *emptyRequest) (*emptyResponce, error) {
-	response := new(emptyResponce)
+type GetTableByTitleResponce struct {
+	XMLName xml.Name `xml:"http://mfisoft.ru/soap getTableByTitleResponse"`
+	Result  string `xml:"result"`
+}
+
+func (service *SOAPService) GetTableByTitle(request *GetTableByTitleRequest) (*GetTableByTitleResponce, error) {
+	response := new(GetTableByTitleResponce)
 	err := service.client.Call("", request, response)
 	if err != nil {
 		return nil, err
@@ -188,8 +195,19 @@ func (service *ServicePortType) GetTableByTitle(request *emptyRequest) (*emptyRe
 	return response, nil
 }
 
-func (service *ServicePortType) GetColumnLookup(request *emptyRequest) (*emptyResponce, error) {
-	response := new(emptyResponce)
+type GetColumnLookupRequest struct {
+	XMLName     xml.Name `xml:"http://mfisoft.ru/voip/service/soap getColumnLookup"`
+	P_table_hi  string `xml:",omitempty"`
+	P_column_nm string `xml:",omitempty"`
+}
+
+type GetColumnLookupResponce struct {
+	XMLName xml.Name `xml:"http://mfisoft.ru/soap getColumnLookupResponse"`
+	Result  ResponceRowset `xml:"result"` // TODO responce not tested
+}
+
+func (service *SOAPService) GetColumnLookup(request *GetColumnLookupRequest) (*GetColumnLookupResponce, error) {
+	response := new(GetColumnLookupResponce)
 	err := service.client.Call("", request, response)
 	if err != nil {
 		return nil, err
@@ -197,6 +215,3 @@ func (service *ServicePortType) GetColumnLookup(request *emptyRequest) (*emptyRe
 
 	return response, nil
 }
-
-
-*/
