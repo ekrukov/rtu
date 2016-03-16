@@ -171,7 +171,7 @@ type QueryResponce struct {
 	Select   *soap.SelectRowsetResponce
 	Insert   int
 	Delete   int
-	Update	 int
+	Update   int
 	Count    int
 }
 
