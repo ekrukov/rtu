@@ -130,6 +130,9 @@ func (q *RTUQuery) Run() (res *QueryResponce, err error) {
 			Sort: q.Sort,
 			Limit: q.Limit,
 		})
+		if err != nil {
+			return nil, err
+		}
 	case "describe":
 		res.Describe, err = q.client.SOAPClient.DescribeColumns(q.tableId)
 	case "count":
