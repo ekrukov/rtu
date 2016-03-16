@@ -65,7 +65,30 @@ func main() {
 
 	*/
 
+	/* Insert example
 
+
+	rowmap := map[string]string{
+		"rule_name" : "testrule",
+		"priority" : "100",
+		"disconnect_code" : "262546",
+		"action" : "2",
+		"description" : "testdesc",
+		"ani_pattern" : "11111111111",
+		"dnis_exclude" : "1800.{7}",
+	}
+
+	row, err := soap.MapToRow(&rowmap)
+
+	rowset := soap.Rowset{Rows: []soap.Row{*row}}
+	res, err := rtu.NewRTUQuery(client).Insert().Into("prerouting").Values(&rowset).Run()
+	if err != nil {
+		log.Println(err)
+		return
+	}
+	log.Printf("%v", res.Insert)
+
+	*/
 }
 
 

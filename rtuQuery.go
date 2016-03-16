@@ -45,9 +45,10 @@ func (q *RTUQuery) Delete() *RTUQuery {
 	return q
 }
 
-func (q *RTUQuery) Insert(template *soap.Template) *RTUQuery {
+//TODO template as in param => q.InsertTemplate
+
+func (q *RTUQuery) Insert() *RTUQuery {
 	q.Action = "insert"
-	q.InsertTemplate = template
 	return q
 }
 
@@ -134,8 +135,21 @@ func (q *RTUQuery) Run() (res *QueryResponce, err error) {
 			P_table_hi: q.tableId,
 			Filter: *q.Filter,
 		})
+		if err != nil {
+			return nil, err
+		}
 		res.Count = count.Result
-		return res, err
+		return res, nil
+	case "insert":
+		insert, err := q.client.SOAPClient.InsertRowset(&soap.InsertRowsetRequest{
+			P_table_hi: q.tableId,
+			P_rowset: *q.Rowset,
+		})
+		if err != nil {
+			return nil, err
+		}
+		res.Insert = insert.Result
+		return res, nil
 	}
 	return nil, errors.New("RTUQuery run error action not found")
 }

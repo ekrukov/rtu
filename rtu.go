@@ -14,4 +14,3 @@ func NewRTUClient(s, l, p string) *RTUClient {
 	client.SOAPClient = soap.NewServicePortType("https://" + s + "/service/service.php?soap", true, clientAuth)
 	return client
 }
-
