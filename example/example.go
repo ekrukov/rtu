@@ -2,7 +2,6 @@ package main
 
 import (
 	"github.com/ekrukov/rtu"
-	"github.com/ekrukov/rtu/soap"
 	"log"
 )
 
