@@ -29,9 +29,9 @@ func checkInMap(m map[string]string, key string) (value string, err error) {
 	return "", errors.New("Unknown field in filter map")
 }
 
-func MapToRow(m *map[string]string) (r *Row, e error) {
+func MapToRow(m map[string]string) (r *Row, e error) {
 	columnMap := []Column{}
-	for key, value := range *m {
+	for key, value := range m {
 		columnMap = append(columnMap, Column{
 			Name: key,
 			Value: value,
@@ -41,10 +41,10 @@ func MapToRow(m *map[string]string) (r *Row, e error) {
 	return r, e
 }
 
-func MapsToRowset(m *[]map[string]string) (r *Rowset, e error) {
+func MapsToRowset(m []map[string]string) (r *Rowset, e error) {
 	rows := []Row{}
-	for _, row := range *m {
-		rowMap, e := MapToRow(&row)
+	for _, row := range m {
+		rowMap, e := MapToRow(row)
 		rows = append(rows, *rowMap)
 		if e != nil {
 			return nil, e

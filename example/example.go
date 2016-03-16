@@ -79,7 +79,7 @@ func main() {
 			"dnis_exclude" : "1111111111[0-9]",
 		},
 	}
-	res, err = query.Insert().Into("prerouting").Values(&rowset).Run()
+	res, err = query.Insert().Into("prerouting").Values(rowset).Run()
 	if err != nil {
 		log.Println(err)
 		return
@@ -101,7 +101,7 @@ func main() {
 		"value" : "testrule",
 	}
 
-	res, err = query.Update("prerouting").Set(&rowset).Where(filter).Run()
+	res, err = query.Update("prerouting").Set(rowset).Where(filter).Run()
 
 	if err != nil {
 		log.Println(err)

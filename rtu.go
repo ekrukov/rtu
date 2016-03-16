@@ -12,7 +12,7 @@ type RTUQuery struct {
 	TableName      string
 	tableId        string
 	Filter         map[string]string
-	Rowset         *[]map[string]string
+	Rowset         []map[string]string
 	Sort           soap.Ordertype
 	Limit          int
 	Offset         int
@@ -53,7 +53,7 @@ func (q *RTUQuery) Insert() *RTUQuery {
 	return q
 }
 
-func (q *RTUQuery) Set(rowset *[]map[string]string) *RTUQuery {
+func (q *RTUQuery) Set(rowset []map[string]string) *RTUQuery {
 	if q.Action != "update" {
 		errorString := "RTUQuery builder error, set without update"
 		q.err = errors.New(errorString)
@@ -86,7 +86,7 @@ func (q *RTUQuery) Into(table string) *RTUQuery {
 	return q
 }
 
-func (q *RTUQuery) Values(rowset *[]map[string]string) *RTUQuery {
+func (q *RTUQuery) Values(rowset []map[string]string) *RTUQuery {
 	q.Rowset = rowset
 	return q
 }

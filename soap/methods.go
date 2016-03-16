@@ -65,7 +65,6 @@ func (service *SOAPService) InsertRowset(request *InsertRowsetRequest) (*InsertR
 	if err != nil {
 		return nil, err
 	}
-
 	return response, nil
 }
 
@@ -91,7 +90,6 @@ func (service *SOAPService) UpdateRowset(request *UpdateRowsetRequest) (*UpdateR
 	if err != nil {
 		return nil, err
 	}
-
 	return response, nil
 }
 
@@ -117,7 +115,6 @@ func (service *SOAPService) DeleteRowset(request *DeleteRowsetRequest) (*DeleteR
 	if err != nil {
 		return nil, err
 	}
-
 	return response, nil
 }
 
@@ -142,7 +139,6 @@ func (service *SOAPService) CountRowset(request *CountRowsetRequest) (*CountRows
 	if err != nil {
 		return nil, err
 	}
-
 	return response, nil
 }
 
@@ -166,7 +162,6 @@ func (service *SOAPService) DescribeColumns(request *DescribeColumnRequest) (*De
 	if err != nil {
 		return nil, err
 	}
-
 	return response, nil
 }
 
@@ -191,7 +186,6 @@ func (service *SOAPService) GetTableByTitle(request *GetTableByTitleRequest) (*G
 	if err != nil {
 		return nil, err
 	}
-
 	return response, nil
 }
 
@@ -212,6 +206,5 @@ func (service *SOAPService) GetColumnLookup(request *GetColumnLookupRequest) (*G
 	if err != nil {
 		return nil, err
 	}
-
 	return response, nil
 }
