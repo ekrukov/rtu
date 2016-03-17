@@ -2,7 +2,6 @@ package rtu
 
 import (
 	"github.com/ekrukov/rtu/soap"
-	"log"
 	"errors"
 )
 
@@ -26,7 +25,6 @@ func GetTableIdByName(n string) (id string, err error) {
 	if id, ok := tableIds[n]; ok {
 		return id, nil
 	} else {
-		log.Fatal("")
 		return "", errors.New("Attempt to search for unknown table")
 	}
 }
