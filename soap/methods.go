@@ -26,10 +26,10 @@ func NewSOAPService(url string, tls bool, auth *SOAPAuth) *SOAPService {
 type SelectRowsetRequest struct {
 	XMLName    xml.Name `xml:"http://mfisoft.ru/voip/service/soap selectRowset"`
 	P_table_hi string `xml:"p_table_hi"`
-	P_filter     Filter `xml:"http://mfisoft.ru/voip/service/soap p_filter,omitempty"`
-	P_sort       Sort `xml:"http://mfisoft.ru/voip/service/soap p_sort,omitempty"`
-	P_limit      int `xml:"p_limit"`
-	P_offset     int `xml:"p_offset"`
+	P_filter   Filter `xml:"http://mfisoft.ru/voip/service/soap p_filter,omitempty"`
+	P_sort     Sort `xml:"http://mfisoft.ru/voip/service/soap p_sort,omitempty"`
+	P_limit    int `xml:"p_limit"`
+	P_offset   int `xml:"p_offset"`
 }
 
 type SelectRowsetResponce struct {

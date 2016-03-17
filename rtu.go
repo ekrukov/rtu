@@ -37,7 +37,7 @@ func (q *RTUQuery) Select() *RTUQuery {
 
 func (q *RTUQuery) Update(table string) *RTUQuery {
 	q.action = "update"
-	q.tableId, q.err = soap.GetTableIdByName(table)
+	q.tableId, q.err = GetTableIdByName(table)
 	return q
 }
 
@@ -66,7 +66,7 @@ func (q *RTUQuery) Set(rowset []map[string]string) *RTUQuery {
 
 func (q *RTUQuery) From(table string) *RTUQuery {
 	if q.action == "select" || q.action == "delete" {
-		q.tableId, q.err = soap.GetTableIdByName(table)
+		q.tableId, q.err = GetTableIdByName(table)
 	} else {
 		errorString := "RTUQuery builder error, from without select or delete"
 		q.err = errors.New(errorString)
@@ -77,7 +77,7 @@ func (q *RTUQuery) From(table string) *RTUQuery {
 
 func (q *RTUQuery) Into(table string) *RTUQuery {
 	if q.action == "insert" {
-		q.tableId, q.err = soap.GetTableIdByName(table)
+		q.tableId, q.err = GetTableIdByName(table)
 	} else {
 		errorString := "RTUQuery builder error, into without insert"
 		q.err = errors.New(errorString)
@@ -113,13 +113,13 @@ func (q *RTUQuery) Offset(offset int) *RTUQuery {
 
 func (q *RTUQuery) Describe(table string) *RTUQuery {
 	q.action = "describe"
-	q.tableId, q.err = soap.GetTableIdByName(table)
+	q.tableId, q.err = GetTableIdByName(table)
 	return q
 }
 
 func (q *RTUQuery) Count(table string, filter map[string]string) *RTUQuery {
 	q.action = "count"
-	q.tableId, q.err = soap.GetTableIdByName(table)
+	q.tableId, q.err = GetTableIdByName(table)
 	q.filter = filter
 	return q
 }
@@ -136,7 +136,7 @@ func (q *RTUQuery) Run() (res *QueryResponce, err error) {
 			P_offset: q.offset,
 		}
 		if q.tableId == "" {
-			return nil,  errors.New("need table for select")
+			return nil, errors.New("need table for select")
 		}
 		request.P_table_hi = q.tableId
 		if q.filter != nil {

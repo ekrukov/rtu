@@ -33,7 +33,7 @@ type Column struct {
 
 type Sort struct {
 	XMLName xml.Name `xml:"http://mfisoft.ru/voip/service/soap p_sort"`
-	Items    []Sortitem `xml:"http://mfisoft.ru/voip/service/soap item"`
+	Items   []Sortitem `xml:"http://mfisoft.ru/voip/service/soap item"`
 }
 
 type Sortitem struct {

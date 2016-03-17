@@ -23,7 +23,7 @@ func main() {
 		"value" : "11111111111",
 	}
 
-	sort := map[string]string {
+	sort := map[string]string{
 		"cdr_id" : rtu.OrdertypeDesc,
 	}
 

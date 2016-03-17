@@ -4,7 +4,7 @@ import (
 	"errors"
 )
 
-func MapToSort(m map[string]string) (s *Sort, err error){
+func MapToSort(m map[string]string) (s *Sort, err error) {
 	items := []Sortitem{}
 	for column, dir := range m {
 		if order := Ordertype(dir); order != "" {

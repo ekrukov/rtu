@@ -6,7 +6,8 @@ import (
 	"errors"
 )
 
-const ( //TODO
+const (
+//TODO
 	OrdertypeAsc soap.Ordertype = soap.OrdertypeAsc
 	OrdertypeDesc soap.Ordertype = soap.OrdertypeDesc
 )
