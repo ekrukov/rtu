@@ -7,11 +7,15 @@ import (
 	"io/ioutil"
 	"log"
 	"net/http"
-	"net"
 	"time"
+	"net"
 )
 
 var timeout = time.Duration(30 * time.Second)
+
+func dialTimeout(network, addr string) (net.Conn, error) {
+	return net.DialTimeout(network, addr, timeout)
+}
 
 type SOAPClient struct {
 	url  string
@@ -104,6 +108,3 @@ func (s *SOAPClient) Call(soapAction string, request, response interface{}) erro
 	return nil
 }
 
-func dialTimeout(network, addr string) (net.Conn, error) {
-	return net.DialTimeout(network, addr, timeout)
-}

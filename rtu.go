@@ -16,7 +16,7 @@ type RTUQuery struct {
 	sort           map[string]string
 	limit          int
 	offset         int
-	insertTemplate *soap.Template
+	insertTemplate map[string]string
 	err            error
 }
 

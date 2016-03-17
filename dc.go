@@ -1,8 +1,14 @@
-package soap
+package rtu
 
 import (
+	"github.com/ekrukov/rtu/soap"
 	"log"
 	"errors"
+)
+
+const ( //TODO
+	OrdertypeAsc soap.Ordertype = soap.OrdertypeAsc
+	OrdertypeDesc soap.Ordertype = soap.OrdertypeDesc
 )
 
 var tableIds = map[string]string{
@@ -23,3 +29,5 @@ func GetTableIdByName(n string) (id string, err error) {
 		return "", errors.New("Attempt to search for unknown table")
 	}
 }
+
+
