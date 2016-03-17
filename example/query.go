@@ -32,10 +32,12 @@ func main() {
 	if err != nil {
 		log.Println(err)
 	}
-	for in, it := range res.Select.Result.Rows {
+	for _, it := range res.Select.Result.Rows {
+		cdr := new(rtu.CDR)
 		for _, item := range it.Items {
-			log.Printf("%v, %v, %v", in, item.Key, item.Value)
+			cdr.SetField(item.Key, item.Value)
 		}
+		log.Printf("%+v", cdr)
 		log.Printf("")
 	}
 
