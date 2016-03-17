@@ -11,7 +11,7 @@ var serverPass string = "superpasswd"
 
 func main() {
 
-	query := rtu.NewRTUQuery(serverName, serverLogin, serverPass)
+	query := rtu.NewRTUClient(serverName, serverLogin, serverPass).Query()
 
 
 	/* Select example */

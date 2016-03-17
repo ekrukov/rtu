@@ -20,16 +20,6 @@ type RTUQuery struct {
 	err            error
 }
 
-func NewRTUQuery(s, l, p string) *RTUQuery {
-	clientAuth := &soap.SOAPAuth{Login: l, Password: p}
-	return &RTUQuery{
-		client: soap.NewSOAPService("https://" + s + "/service/service.php?soap", true, clientAuth),
-		tableId: "",
-		limit: 1000,
-		offset: 0,
-	}
-}
-
 func (q *RTUQuery) Select() *RTUQuery {
 	q.action = "select"
 	return q
