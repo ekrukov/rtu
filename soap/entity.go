@@ -4,6 +4,17 @@ import (
 	"encoding/xml"
 )
 
+type Methodtype string
+
+const (
+	SelectMethod Methodtype = "SelectRowset"
+	InsertMethod Methodtype = "InsertRowset"
+	UpdateMethod Methodtype = "UpdateRowset"
+	DeleteMethod Methodtype = "DeleteRowset"
+	CountMethod Methodtype = "CountRowset"
+	DescribeMethod Methodtype = "DescribeColumns"
+)
+
 type Ordertype string
 
 const (
@@ -152,12 +163,12 @@ type CountRowsetResponce struct {
  *	Describe Request structures
  */
 
-type DescribeColumnRequest struct {
+type DescribeColumnsRequest struct {
 	XMLName    xml.Name `xml:"http://mfisoft.ru/voip/service/soap describeColumns"`
 	P_table_hi string `xml:"p_table_hi"`
 }
 
-type DescribeColumnResponce struct {
+type DescribeColumnsResponce struct {
 	XMLName xml.Name `xml:"http://mfisoft.ru/soap describeColumnsResponse"`
 	Result  ResponceRowset `xml:"result"`
 }

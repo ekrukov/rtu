@@ -31,7 +31,7 @@ func NewSOAPClient(url string, tls bool, auth *SOAPAuth) *SOAPClient {
 	}
 }
 
-func (s *SOAPClient) Call(soapAction string, request, response interface{}) error {
+func (s *SOAPClient) Call(soapMethod Methodtype, request, response interface{}) error {
 	envelope := SOAPEnvelope{}
 
 	envelope.Header.Auth.Login = s.auth.Login
@@ -62,8 +62,8 @@ func (s *SOAPClient) Call(soapAction string, request, response interface{}) erro
 	}
 
 	req.Header.Add("Content-Type", "text/xml; charset=\"utf-8\"")
-	if soapAction != "" {
-		req.Header.Add("SOAPAction", soapAction)
+	if Methodtype(soapMethod) != "" {
+		req.Header.Add("SOAPAction", string(soapMethod))
 	}
 
 	req.Header.Set("User-Agent", "gowsdl/0.1")
