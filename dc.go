@@ -1,19 +1,9 @@
 package rtu
 
 import (
-	"github.com/ekrukov/rtu/soap"
 	"errors"
 )
 
-//TODO
-
-type Ordertype soap.Ordertype
-
-const (
-
-	OrdertypeAsc soap.Ordertype = soap.OrdertypeAsc
-	OrdertypeDesc soap.Ordertype = soap.OrdertypeDesc
-)
 
 var tableIds = map[string]string{
 	"cdrH": "02.2205.01",
