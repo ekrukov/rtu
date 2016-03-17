@@ -7,7 +7,7 @@ import (
 )
 
 type RTUQuery struct {
-	client         *soap.SOAPService
+	client         *soap.SOAPClient
 	action         string
 	tableName      string
 	tableId        string
@@ -146,14 +146,14 @@ func (q *RTUQuery) Run() (res *QueryResponce, err error) {
 			request.P_sort = *sort
 		}
 
-		res.Select, err = q.client.SelectRowset(&request)
+		err = q.client.Call("selectRowset", &request, &res.Select)
 		if err != nil {
 			return nil, err
 		}
 	case "describe":
-		res.Describe, err = q.client.DescribeColumns(&soap.DescribeColumnRequest{
+		err = q.client.Call("DescribeColumns", &soap.DescribeColumnRequest{
 			P_table_hi: q.tableId,
-		})
+		}, &res.Describe)
 		if err != nil {
 			return nil, err
 		}
@@ -162,10 +162,11 @@ func (q *RTUQuery) Run() (res *QueryResponce, err error) {
 		if err != nil {
 			return nil, err
 		}
-		count, err := q.client.CountRowset(&soap.CountRowsetRequest{
+		count := new(soap.CountRowsetResponce)
+		err = q.client.Call("CountRowset", &soap.CountRowsetRequest{
 			P_table_hi: q.tableId,
 			Filter: *filter,
-		})
+		}, &count)
 		if err != nil {
 			return nil, err
 		}
@@ -175,10 +176,11 @@ func (q *RTUQuery) Run() (res *QueryResponce, err error) {
 		if err != nil {
 			return nil, err
 		}
-		insert, err := q.client.InsertRowset(&soap.InsertRowsetRequest{
+		insert := new(soap.InsertRowsetResponce)
+		err = q.client.Call("InsertRowset", &soap.InsertRowsetRequest{
 			P_table_hi: q.tableId,
 			P_rowset: *rowset,
-		})
+		}, &insert)
 		if err != nil {
 			return nil, err
 		}
@@ -192,11 +194,12 @@ func (q *RTUQuery) Run() (res *QueryResponce, err error) {
 		if err != nil {
 			return nil, err
 		}
-		update, err := q.client.UpdateRowset(&soap.UpdateRowsetRequest{
+		update := new(soap.UpdateRowsetResponce)
+		err = q.client.Call("UpdateRowset", &soap.UpdateRowsetRequest{
 			P_table_hi: q.tableId,
 			P_rowset: *rowset,
 			Filter: *filter,
-		})
+		}, &update)
 		if err != nil {
 			return nil, err
 		}
@@ -211,6 +214,7 @@ func (q *RTUQuery) Print() {
 	log.Printf("%+v", q)
 }
 
+
 type QueryResponce struct {
 	Describe *soap.DescribeColumnResponce
 	Select   *soap.SelectRowsetResponce
@@ -219,5 +223,7 @@ type QueryResponce struct {
 	Update   int
 	Count    int
 }
+
+
 
 

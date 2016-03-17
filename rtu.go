@@ -5,13 +5,13 @@ import (
 )
 
 type RTUClient struct {
-	SOAPClient *soap.SOAPService
+	SOAPClient *soap.SOAPClient
 }
 
 func NewRTUClient(s, l, p string) *RTUClient {
 	client := new(RTUClient)
 	clientAuth := &soap.SOAPAuth{Login: l, Password: p}
-	client.SOAPClient = soap.NewSOAPService("https://" + s + "/service/service.php?soap", true, clientAuth)
+	client.SOAPClient = soap.NewSOAPClient("https://" + s + "/service/service.php?soap", true, clientAuth)
 	return client
 }
 
