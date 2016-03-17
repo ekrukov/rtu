@@ -86,21 +86,21 @@ type CDR struct {
 	DST_DISCONNECT_CODES     string
 }
 
-func (c *CDR) SetField(field string, v string) {
+func (c *CDR) SetField(fn string, fv string) {
 	s := reflect.ValueOf(c).Elem()
 	if s.Kind() == reflect.Struct {
-		f := s.FieldByName(strings.ToUpper(field))
+		f := s.FieldByName(strings.ToUpper(fn))
 		if f.IsValid() {
 			if f.CanSet() {
 				if f.Kind() == reflect.String {
 					//log.Printf("%v", strings.ToUpper(field))
-					if v != "" {
-						f.SetString(v)
+					if fv != "" {
+						f.SetString(fv)
 					}
 				}
 			}
 		} else {
-			log.Printf("%v not present in CDR struct", strings.ToUpper(field))
+			log.Printf("%v not present in CDR struct", strings.ToUpper(fn))
 			os.Exit(0)
 		}
 	}
