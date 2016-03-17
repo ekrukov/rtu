@@ -1,6 +1,8 @@
 package soap
 
-import "encoding/xml"
+import (
+	"encoding/xml"
+)
 
 type SOAPService struct {
 	client *SOAPClient
@@ -23,11 +25,11 @@ func NewSOAPService(url string, tls bool, auth *SOAPAuth) *SOAPService {
 
 type SelectRowsetRequest struct {
 	XMLName    xml.Name `xml:"http://mfisoft.ru/voip/service/soap selectRowset"`
-	P_table_hi string `xml:",omitempty"`
-	Filter     Filter `xml:",omitempty"`
-	Sort       Ordertype `xml:",omitempty"`
-	Limit      int `xml:",omitempty"`
-	Offset     int `xml:",omitempty"`
+	P_table_hi string `xml:"p_table_hi"`
+	P_filter     Filter `xml:"http://mfisoft.ru/voip/service/soap p_filter,omitempty"`
+	P_sort       Sort `xml:"http://mfisoft.ru/voip/service/soap p_sort,omitempty"`
+	P_limit      int `xml:"p_limit"`
+	P_offset     int `xml:"p_offset"`
 }
 
 type SelectRowsetResponce struct {
@@ -50,8 +52,8 @@ func (service *SOAPService) SelectRowset(request *SelectRowsetRequest) (*SelectR
 
 type InsertRowsetRequest struct {
 	XMLName    xml.Name `xml:"http://mfisoft.ru/voip/service/soap insertRowset"`
-	P_table_hi string `xml:",omitempty"`
-	P_rowset   Rowset `xml:",omitempty"`
+	P_table_hi string `xml:"p_table_hi"`
+	P_rowset   Rowset `xml:"p_rowset"`
 }
 
 type InsertRowsetResponce struct {
@@ -74,9 +76,9 @@ func (service *SOAPService) InsertRowset(request *InsertRowsetRequest) (*InsertR
 
 type UpdateRowsetRequest struct {
 	XMLName    xml.Name `xml:"http://mfisoft.ru/voip/service/soap updateRowset"`
-	P_table_hi string `xml:",omitempty"`
-	P_rowset   Rowset `xml:",omitempty"`
-	Filter     Filter `xml:",omitempty"`
+	P_table_hi string `xml:"p_table_hi"`
+	P_rowset   Rowset `xml:"p_rowset"`
+	Filter     Filter `xml:"http://mfisoft.ru/voip/service/soap p_filter"`
 }
 
 type UpdateRowsetResponce struct {
@@ -99,9 +101,9 @@ func (service *SOAPService) UpdateRowset(request *UpdateRowsetRequest) (*UpdateR
 
 type DeleteRowsetRequest struct {
 	XMLName    xml.Name `xml:"http://mfisoft.ru/voip/service/soap deleteRowset"`
-	P_table_hi string `xml:",omitempty"`
-	P_rowset   Rowset `xml:",omitempty"`
-	Filter     Filter `xml:",omitempty"`
+	P_table_hi string `xml:"p_table_hi"`
+	P_rowset   Rowset `xml:"p_rowset"`
+	Filter     Filter `xml:"http://mfisoft.ru/voip/service/soap p_filter"`
 }
 
 type DeleteRowsetResponce struct {
@@ -124,8 +126,8 @@ func (service *SOAPService) DeleteRowset(request *DeleteRowsetRequest) (*DeleteR
 
 type CountRowsetRequest struct {
 	XMLName    xml.Name `xml:"http://mfisoft.ru/voip/service/soap countRowset"`
-	P_table_hi string `xml:",omitempty"`
-	Filter     Filter `xml:",omitempty"`
+	P_table_hi string `xml:"p_table_hi"`
+	Filter     Filter `xml:"http://mfisoft.ru/voip/service/soap p_filter,omitempty"`
 }
 
 type CountRowsetResponce struct {
@@ -148,7 +150,7 @@ func (service *SOAPService) CountRowset(request *CountRowsetRequest) (*CountRows
 
 type DescribeColumnRequest struct {
 	XMLName    xml.Name `xml:"http://mfisoft.ru/voip/service/soap describeColumns"`
-	P_table_hi string `xml:",omitempty"`
+	P_table_hi string `xml:"p_table_hi"`
 }
 
 type DescribeColumnResponce struct {
@@ -172,7 +174,7 @@ func (service *SOAPService) DescribeColumns(request *DescribeColumnRequest) (*De
 
 type GetTableByTitleRequest struct {
 	XMLName    xml.Name `xml:"http://mfisoft.ru/voip/service/soap getTableByTitle"`
-	P_table_hi string `xml:",omitempty"`
+	P_table_hi string `xml:"p_table_hi"`
 }
 
 type GetTableByTitleResponce struct {
@@ -191,8 +193,8 @@ func (service *SOAPService) GetTableByTitle(request *GetTableByTitleRequest) (*G
 
 type GetColumnLookupRequest struct {
 	XMLName     xml.Name `xml:"http://mfisoft.ru/voip/service/soap getColumnLookup"`
-	P_table_hi  string `xml:",omitempty"`
-	P_column_nm string `xml:",omitempty"`
+	P_table_hi  string `xml:"p_table_hi"`
+	P_column_nm string `xml:"p_column_nm"`
 }
 
 type GetColumnLookupResponce struct {

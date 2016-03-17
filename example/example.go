@@ -23,7 +23,12 @@ func main() {
 		"value" : "11111111111",
 	}
 
-	res, err := query.Select().From("cdrH").Where(filter).Run()
+	sort := map[string]string {
+		"cdr_id" : "desc",
+	}
+
+	res, err := query.Select().From("cdrH").Where(filter).OrderBy(sort).Limit(2).Offset(1).Run()
+
 	if err != nil {
 		log.Println(err)
 	}

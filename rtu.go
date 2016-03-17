@@ -13,7 +13,7 @@ type RTUQuery struct {
 	tableId        string
 	filter         map[string]string
 	rowset         []map[string]string
-	sort           soap.Ordertype
+	sort           map[string]string
 	limit          int
 	offset         int
 	insertTemplate *soap.Template
@@ -24,7 +24,7 @@ func NewRTUQuery(s, l, p string) *RTUQuery {
 	clientAuth := &soap.SOAPAuth{Login: l, Password: p}
 	return &RTUQuery{
 		client: soap.NewSOAPService("https://" + s + "/service/service.php?soap", true, clientAuth),
-		sort: soap.OrdertypeAsc,
+		tableId: "",
 		limit: 1000,
 		offset: 0,
 	}
@@ -96,8 +96,18 @@ func (q *RTUQuery) Where(filter map[string]string) *RTUQuery {
 	return q
 }
 
-func (q *RTUQuery) OrderBy(sort soap.Ordertype) *RTUQuery {
+func (q *RTUQuery) OrderBy(sort map[string]string) *RTUQuery {
 	q.sort = sort
+	return q
+}
+
+func (q *RTUQuery) Limit(limit int) *RTUQuery {
+	q.limit = limit
+	return q
+}
+
+func (q *RTUQuery) Offset(offset int) *RTUQuery {
+	q.offset = offset
 	return q
 }
 
@@ -121,16 +131,32 @@ func (q *RTUQuery) Run() (res *QueryResponce, err error) {
 	}
 	switch q.action {
 	case "select":
-		filter, err := soap.MapToFilter(q.filter)
-		if err != nil {
-			return nil, err
+		request := soap.SelectRowsetRequest{
+			P_limit: q.limit,
+			P_offset: q.offset,
 		}
-		res.Select, err = q.client.SelectRowset(&soap.SelectRowsetRequest{
-			P_table_hi: q.tableId,
-			Filter: *filter,
-			Sort: q.sort,
-			Limit: q.limit,
-		})
+		if q.tableId == "" {
+			return nil,  errors.New("need table for select")
+		}
+		request.P_table_hi = q.tableId
+		if q.filter != nil {
+			filter, err := soap.MapToFilter(q.filter)
+			if err != nil {
+				return nil, err
+			}
+			request.P_filter = *filter
+		} else {
+			return nil, errors.New("need filter for select")
+		}
+		if q.sort != nil {
+			sort, err := soap.MapToSort(q.sort)
+			if err != nil {
+				return nil, err
+			}
+			request.P_sort = *sort
+		}
+
+		res.Select, err = q.client.SelectRowset(&request)
 		if err != nil {
 			return nil, err
 		}

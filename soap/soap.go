@@ -29,13 +29,15 @@ func NewSOAPClient(url string, tls bool, auth *SOAPAuth) *SOAPClient {
 
 func (s *SOAPClient) Call(soapAction string, request, response interface{}) error {
 	envelope := SOAPEnvelope{}
+
 	envelope.Header.Auth.Login = s.auth.Login
 	envelope.Header.Auth.Password = s.auth.Password
 	envelope.Body.Content = request
+
 	buffer := new(bytes.Buffer)
 
 	encoder := xml.NewEncoder(buffer)
-	//encoder.Indent("  ", "    ")
+	encoder.Indent("  ", "    ")
 
 	if err := encoder.Encode(envelope); err != nil {
 		return err
