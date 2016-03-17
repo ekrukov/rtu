@@ -24,7 +24,7 @@ func main() {
 	}
 
 	sort := map[string]string{
-		"cdr_id" : rtu.OrdertypeDesc,
+		"cdr_id" : "asc",
 	}
 
 	res, err := query.Select().From("cdrH").Where(filter).OrderBy(sort).Limit(2).Offset(1).Run()
