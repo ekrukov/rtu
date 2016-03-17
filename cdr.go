@@ -34,8 +34,8 @@ type CDR struct {
 	SRC_IN_LEG_CONF_ID       string
 	SRC_IN_LEG_CALL_ID       string
 	SRC_OUT_LEG_CALL_ID      string
-	SRC_USER		 string
-	DST_USER		 string
+	SRC_USER                 string
+	DST_USER                 string
 	SRC_NAME                 string
 	DST_NAME                 string
 	DP_NAME                  string
@@ -70,19 +70,19 @@ type CDR struct {
 	DST_MIN_JITTER_SIZE      string
 	DST_MAX_JITTER_SIZE      string
 	LAST_CDR                 string
-	IN_CPC			 string
-	OUT_CPC			 string
+	IN_CPC                   string
+	OUT_CPC                  string
 	IN_ZONE                  string
 	OUT_ZONE                 string
 	DISCONNECT_INITIATOR     string
-	DIVERSION		 string
-	IN_ANI_TYPE_OF_NUMBER	 string
-	IN_DNIS_TYPE_OF_NUMBER	 string
+	DIVERSION                string
+	IN_ANI_TYPE_OF_NUMBER    string
+	IN_DNIS_TYPE_OF_NUMBER   string
 	OUT_ANI_TYPE_OF_NUMBER   string
 	OUT_DNIS_TYPE_OF_NUMBER  string
-	IN_ORIG_DNIS		 string
-	OUT_ORIG_DNIS		 string
-	SRC_DISCONNECT_CODES	 string
+	IN_ORIG_DNIS             string
+	OUT_ORIG_DNIS            string
+	SRC_DISCONNECT_CODES     string
 	DST_DISCONNECT_CODES     string
 }
 
