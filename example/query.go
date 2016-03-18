@@ -37,7 +37,7 @@ func main() {
 
 	/* Describe example
 
-	res, err := query.Describe("cdrH").Run().GetRows()
+	res, err := query.Describe("cdrH").GetRows()
 	if err != nil {
 		log.Println(err)
 	}
