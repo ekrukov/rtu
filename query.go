@@ -12,7 +12,7 @@ type RTUQuery struct {
 	tableId        string
 	filter         map[string]string
 	rowset         []map[string]string
-	sort           map[string]string
+	sort           map[string]Ordertype
 	limit          int
 	offset         int
 	insertTemplate map[string]string
@@ -85,7 +85,7 @@ func (q *RTUQuery) Where(filter map[string]string) *RTUQuery {
 	return q
 }
 
-func (q *RTUQuery) OrderBy(sort map[string]string) *RTUQuery {
+func (q *RTUQuery) OrderBy(sort map[string]Ordertype) *RTUQuery {
 	q.sort = sort
 	return q
 }

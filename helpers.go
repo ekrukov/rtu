@@ -1,21 +1,16 @@
 package rtu
 
-
 import (
 	"errors"
 )
 
-func MapToSort(m map[string]string) (s *Sort, err error) {
+func MapToSort(m map[string]Ordertype) (s *Sort, err error) {
 	items := []Sortitem{}
 	for column, dir := range m {
-		if order := Ordertype(dir); order != "" {
-			items = append(items, Sortitem{
-				Column: column,
-				Dir: Ordertype(dir),
-			})
-		} else {
-			return nil, errors.New("Unknown order type")
-		}
+		items = append(items, Sortitem{
+			Column: column,
+			Dir: dir,
+		})
 	}
 	s = &Sort{Items: items}
 	return s, err
