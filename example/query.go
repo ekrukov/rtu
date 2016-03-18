@@ -23,8 +23,8 @@ func main() {
 		"value" : "11111111111",
 	}
 
-	sort := map[string]string{
-		"cdr_id" : "asc",
+	sort := map[string]rtu.Ordertype{
+		"cdr_id" : rtu.OrdertypeAsc
 	}
 
 	res, err := query.Select().From("cdrH").Where(filter).OrderBy(sort).Limit(2).Offset(1).Run()
