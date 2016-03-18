@@ -4,6 +4,24 @@ import (
 	"errors"
 )
 
+type Methodtype string
+
+const (
+	SelectMethod Methodtype = "SelectRowset"
+	InsertMethod Methodtype = "InsertRowset"
+	UpdateMethod Methodtype = "UpdateRowset"
+	DeleteMethod Methodtype = "DeleteRowset"
+	CountMethod Methodtype = "CountRowset"
+	DescribeMethod Methodtype = "DescribeColumns"
+)
+
+type Ordertype string
+
+const (
+	OrdertypeAsc Ordertype = "asc"
+	OrdertypeDesc Ordertype = "desc"
+)
+
 
 var tableIds = map[string]string{
 	"cdrH": "02.2205.01",

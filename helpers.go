@@ -1,4 +1,5 @@
-package soap
+package rtu
+
 
 import (
 	"errors"
@@ -60,4 +61,5 @@ func MapsToRowset(m []map[string]string) (r *Rowset, err error) {
 	r = &Rowset{Rows: rows}
 	return r, err
 }
+
 

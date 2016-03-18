@@ -1,17 +1,17 @@
 package rtu
 
 import (
-	"github.com/ekrukov/rtu/soap"
+
 )
 
 type RTUClient struct {
-	SOAPClient *soap.SOAPClient
+	SOAPClient *SOAPClient
 }
 
 func NewRTUClient(s, l, p string) *RTUClient {
 	client := new(RTUClient)
-	clientAuth := &soap.SOAPAuth{Login: l, Password: p}
-	client.SOAPClient = soap.NewSOAPClient("https://" + s + "/service/service.php?soap", true, clientAuth)
+	clientAuth := &SOAPAuth{Login: l, Password: p}
+	client.SOAPClient = NewSOAPClient("https://" + s + "/service/service.php?soap", true, clientAuth)
 	return client
 }
 
