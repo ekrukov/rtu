@@ -15,6 +15,7 @@ func NewRTUClient(s, l, p string) *RTUClient {
 	return client
 }
 
+// Create new query with current client
 func (r *RTUClient) Query() *RTUQuery {
 	return &RTUQuery{
 		client: r.SOAPClient,
@@ -23,3 +24,5 @@ func (r *RTUClient) Query() *RTUQuery {
 		offset: 0,
 	}
 }
+
+

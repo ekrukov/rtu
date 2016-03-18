@@ -14,7 +14,7 @@ func main() {
 	query := rtu.NewRTUClient(serverName, serverLogin, serverPass).Query()
 
 
-	/* Select example */
+	/* Select example
 
 	filter := map[string]string{
 		"type" : "cond",
@@ -24,56 +24,50 @@ func main() {
 	}
 
 	sort := map[string]rtu.Ordertype{
-		"cdr_id" : rtu.OrdertypeAsc
+		"cdr_id" : rtu.OrdertypeAsc,
 	}
 
-	res, err := query.Select().From("cdrH").Where(filter).OrderBy(sort).Limit(2).Offset(1).Run()
+	res, err := query.Select().From("cdrH").Where(filter).OrderBy(sort).Limit(2).Offset(1).GetCDRs()
 
 	if err != nil {
 		log.Println(err)
 	}
-	for _, it := range res.Select.Result.Rows {
-		cdr := new(rtu.CDR)
-		for _, item := range it.Items {
-			cdr.SetField(item.Key, item.Value)
-		}
-		log.Printf("%+v", cdr)
-		log.Printf("")
-	}
 
-	/* Describe example */
+	log.Printf("%+v", res)
 
-	res, err = query.Describe("cdrH").Run()
+	/* Describe example
+
+	res, err := query.Describe("cdrH").Run().GetRows()
 	if err != nil {
 		log.Println(err)
 	}
 
-	for in, it := range res.Describe.Result.Rows {
+	for in, it := range res {
 		for _, item := range it.Items {
 			log.Printf("%v, %v, %v", in, item.Key, item.Value)
 		}
 		log.Printf("")
 	}
 
-	/* Count example */
+	/* Count example
 
-	filter = map[string]string{
+	filter := map[string]string{
 		"type" : "cond",
 		"column" : "in_ani",
 		"operator" : "=",
 		"value" : "11111111111",
 	}
 
-	res, err = query.Count("cdrH", filter).Run()
+	res, err := query.Count("cdrH", filter).GetInt()
 	if err != nil {
 		log.Println(err)
 	}
 
-	log.Printf("%v", res.Count)
+	log.Printf("%v", res)
 
 
 
-	/* Insert example */
+	/* Insert example
 
 	rowset := []map[string]string{
 		0: {
@@ -86,36 +80,36 @@ func main() {
 			"dnis_exclude" : "1111111111[0-9]",
 		},
 	}
-	res, err = query.Insert().Into("prerouting").Values(rowset).Run()
+	res, err := query.Insert().Into("prerouting").Values(rowset).GetInt()
 	if err != nil {
 		log.Println(err)
 		return
 	}
-	log.Printf("%v", res.Insert)
+	log.Printf("%v", res)
 
-	/*  Update example */
+	/*  Update example
 
-	rowset = []map[string]string{
+	rowset := []map[string]string{
 		0: {
 			"priority" : "105",
 		},
 	}
 
-	filter = map[string]string{
+	filter := map[string]string{
 		"type" : "cond",
 		"column" : "rule_name",
 		"operator" : "=",
 		"value" : "testrule",
 	}
 
-	res, err = query.Update("prerouting").Set(rowset).Where(filter).Run()
+	res, err := query.Update("prerouting").Set(rowset).Where(filter).GetInt()
 
 	if err != nil {
 		log.Println(err)
 		return
 	}
-	log.Printf("%v", res.Update)
-
+	log.Printf("%v", res)
+	*/
 }
 
 

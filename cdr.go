@@ -7,6 +7,10 @@ import (
 	"os"
 )
 
+type CDRs struct {
+	Items	[]CDR
+}
+
 type CDR struct {
 	CDR_ID                   string
 	CDR_DATE                 string
@@ -105,3 +109,4 @@ func (c *CDR) SetField(fn string, fv string) {
 		}
 	}
 }
+
