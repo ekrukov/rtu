@@ -14,7 +14,7 @@ func main() {
 	query := rtu.NewRTUClient(serverName, serverLogin, serverPass).Query()
 
 
-	/* Select example
+	/* Select example */
 
 	filter := map[string]string{
 		"type" : "cond",
