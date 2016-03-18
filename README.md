@@ -3,6 +3,6 @@ rtu (mvts3g) api client
 
 * soap client
 * query builder
-* cdr struct
+* get cdrs
 
 template from https://github.com/hooklift/gowsdl

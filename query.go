@@ -21,12 +21,12 @@ type RTUQuery struct {
 }
 
 type rawResult struct {
-	Describe *DescribeColumnsResponce
-	Select   *SelectRowsetResponce
-	Insert   *InsertRowsetResponce
-	Delete   *DeleteRowsetResponce
-	Update   *UpdateRowsetResponce
-	Count    *CountRowsetResponce
+	Describe *DescribeColumnsResponce //rows in result
+	Select   *SelectRowsetResponce    //rows in result
+	Insert   *InsertRowsetResponce    //int in result
+	Delete   *DeleteRowsetResponce    //int in result
+	Update   *UpdateRowsetResponce    //int in result
+	Count    *CountRowsetResponce     //int in result
 }
 
 func (q *RTUQuery) Select() *RTUQuery {
@@ -257,9 +257,8 @@ func (q *RTUQuery) GetInt() (int, error) {
 }
 
 func (q *RTUQuery) GetCDRs() (cs *CDRs, err error) {
-	err = q.queryExec()
-	if err != nil {
-		log.Fatal(err)
+	if q.method != SelectMethod{
+		err = errors.New("Only select method available for GetCDRs")
 		return nil, err
 	}
 	cs = new(CDRs)
