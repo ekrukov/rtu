@@ -5,6 +5,17 @@ import (
 	"errors"
 )
 
+var (
+	errNeedTable = errors.New("RTU Query: need table for request")
+	errNeedFilter = errors.New("RTU Query: need filter for request")
+	errNeedRowset = errors.New("RTU Query: need rowset for request")
+	errSetWOUpdate = errors.New("RTU Query: attempt to Set without Update")
+	errFromWOSelectOrDelete = errors.New("RTU Query: attempt to From without Select or Delete")
+	errIntoWOInsert = errors.New("RTU Query: attempt to Into action without Insert")
+	errMethodNotFOund = errors.New("RTU Query: method not found")
+	errMethodUnsupport = errors.New("RTU Query: method not support in this context")
+)
+
 type queryBuilder struct {
 	Client  *soapClient
 	Request *requestData
@@ -56,9 +67,7 @@ func (q *queryBuilder) Insert() *queryBuilder {
 
 func (q *queryBuilder) Set(rowset []map[string]string) *queryBuilder {
 	if q.Request.Method != updateMethod {
-		errorString := "queryBuilder builder error, set without update"
-		q.err = errors.New(errorString)
-		log.Fatal(errorString)
+		q.err = errSetWOUpdate
 	} else {
 		q.Request.Rowset, q.err = mapsToRowset(rowset)
 	}
@@ -69,9 +78,7 @@ func (q *queryBuilder) From(table string) *queryBuilder {
 	if q.Request.Method == selectMethod || q.Request.Method == deleteMethod {
 		q.Request.Table.P_table_hi, q.err = GetTableIdByName(table)
 	} else {
-		errorString := "query builder error: from without select or delete"
-		q.err = errors.New(errorString)
-		log.Fatal(errorString)
+		q.err = errFromWOSelectOrDelete
 	}
 	return q
 }
@@ -80,9 +87,7 @@ func (q *queryBuilder) Into(table string) *queryBuilder {
 	if q.Request.Method == insertMethod {
 		q.Request.Table.P_table_hi, q.err = GetTableIdByName(table)
 	} else {
-		errorString := "queryBuilder builder error, into without insert"
-		q.err = errors.New(errorString)
-		log.Fatal(errorString)
+		q.err = errIntoWOInsert
 	}
 	return q
 }
@@ -118,10 +123,9 @@ func (q *queryBuilder) Describe(table string) *queryBuilder {
 	return q
 }
 
-func (q *queryBuilder) Count(table string, filter map[string]string) *queryBuilder {
+func (q *queryBuilder) Count(table string) *queryBuilder {
 	q.Request.Method = countMethod
 	q.Request.Table.P_table_hi, q.err = GetTableIdByName(table)
-	q.Request.Filter, q.err = mapToFilter(filter)
 	return q
 }
 
@@ -138,12 +142,12 @@ func (q *queryBuilder) queryExec() error {
 		if q.Request.Table != nil {
 			request.requestTable = *q.Request.Table
 		} else {
-			return errors.New("need table name for request")
+			return errNeedTable
 		}
 		if q.Request.Filter != nil {
 			request.requestFilter = *q.Request.Filter
 		} else {
-			return errors.New("need filter for select")
+			return errNeedFilter
 		}
 		if q.Request.Sort != nil {
 			request.requestSort = *q.Request.Sort
@@ -158,7 +162,7 @@ func (q *queryBuilder) queryExec() error {
 		if q.Request.Table != nil {
 			request.requestTable = *q.Request.Table
 		} else {
-			return errors.New("need table name for request")
+			return errNeedTable
 		}
 		err := q.Client.Call(q.Request.Method, &request, &q.Result.Describe)
 		if err != nil {
@@ -169,14 +173,30 @@ func (q *queryBuilder) queryExec() error {
 		if q.Request.Filter != nil {
 			request.requestFilter = *q.Request.Filter
 		} else {
-			return errors.New("need filter for count")
+			return errNeedFilter
 		}
 		if q.Request.Table != nil {
 			request.requestTable = *q.Request.Table
 		} else {
-			return errors.New("need table name for request")
+			return errNeedTable
 		}
 		err := q.Client.Call(q.Request.Method, &request, &q.Result.Count)
+		if err != nil {
+			return err
+		}
+	case deleteMethod:
+		request := new(deleteRowsetRequest)
+		if q.Request.Filter != nil {
+			request.requestFilter = *q.Request.Filter
+		} else {
+			return errNeedFilter
+		}
+		if q.Request.Table != nil {
+			request.requestTable = *q.Request.Table
+		} else {
+			return errNeedTable
+		}
+		err := q.Client.Call(q.Request.Method, &request, &q.Result.Delete)
 		if err != nil {
 			return err
 		}
@@ -185,12 +205,12 @@ func (q *queryBuilder) queryExec() error {
 		if q.Request.Rowset != nil {
 			request.requestRowset = *q.Request.Rowset
 		} else {
-			return errors.New("need rowset for insert")
+			return errNeedRowset
 		}
 		if q.Request.Table != nil {
 			request.requestTable = *q.Request.Table
 		} else {
-			return errors.New("need table name for request")
+			return errNeedTable
 		}
 		err := q.Client.Call(q.Request.Method, &request, &q.Result.Insert)
 		if err != nil {
@@ -201,24 +221,24 @@ func (q *queryBuilder) queryExec() error {
 		if q.Request.Rowset != nil {
 			request.requestRowset = *q.Request.Rowset
 		} else {
-			return errors.New("need rowset for update")
+			return errNeedRowset
 		}
 		if q.Request.Table != nil {
 			request.requestTable = *q.Request.Table
 		} else {
-			return errors.New("need table name for request")
+			return errNeedTable
 		}
 		if q.Request.Filter != nil {
 			request.requestFilter = *q.Request.Filter
 		} else {
-			return errors.New("need filter for count")
+			return errNeedFilter
 		}
 		err := q.Client.Call(q.Request.Method, &request, &q.Result.Update)
 		if err != nil {
 			return err
 		}
 	default:
-		return errors.New("queryBuilder run error action not found")
+		return errMethodNotFOund
 	}
 	return nil
 }
@@ -244,7 +264,7 @@ func (q *queryBuilder) GetRows() ([]responseRow, error) {
 	case describeMethod:
 		return q.Result.Describe.Result.Items, nil
 	}
-	return nil, errors.New("Unsupported method for rows response")
+	return nil, errMethodUnsupport
 }
 
 func (q *queryBuilder) GetInt() (int, error) {
@@ -263,12 +283,12 @@ func (q *queryBuilder) GetInt() (int, error) {
 	case countMethod:
 		return q.Result.Count.Result, nil
 	}
-	return 0, errors.New("Unsupported method for int response")
+	return 0, errMethodUnsupport
 }
 
 func (q *queryBuilder) GetCDRs() (cs *CDRs, err error) {
 	if q.Request.Method != selectMethod {
-		err = errors.New("Only select method available for GetCDRs")
+		err = errMethodUnsupport
 		return nil, err
 	}
 	cs = new(CDRs)

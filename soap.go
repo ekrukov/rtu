@@ -26,8 +26,7 @@ type soapClient struct {
 func (s *soapClient) Call(soapMethod methodType, request, response interface{}) error {
 	envelope := soapEnvelope{}
 
-	envelope.Header.Auth.Login = s.auth.Login
-	envelope.Header.Auth.Password = s.auth.Password
+	envelope.Header.Auth = *s.auth
 	envelope.Body.Content = request
 
 	buffer := new(bytes.Buffer)
@@ -108,18 +107,13 @@ type soapEnvelope struct {
 
 type soapHeader struct {
 	XMLName xml.Name `xml:"http://schemas.xmlsoap.org/soap/envelope/ Header"`
-	Auth    soapAuthHeader
-}
-
-type soapAuthHeader struct {
-	XMLName  xml.Name `xml:"http://mfisoft.ru/auth Auth"`
-	Login    string `xml:",omitempty"`
-	Password string `xml:",omitempty"`
+	Auth    soapAuth
 }
 
 type soapAuth struct {
-	Login    string
-	Password string
+	XMLName  xml.Name `xml:"http://mfisoft.ru/auth Auth"`
+	Login    string `xml:",omitempty"`
+	Password string `xml:",omitempty"`
 }
 
 type soapFault struct {

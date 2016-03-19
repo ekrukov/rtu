@@ -58,7 +58,7 @@ func main() {
 		"value" : "11111111111",
 	}
 
-	res, err := query.Count("cdrH", filter).GetInt()
+	res, err := query.Count("cdrH").Where(filter).GetInt()
 	if err != nil {
 		log.Println(err)
 	}
@@ -110,6 +110,23 @@ func main() {
 	}
 	log.Printf("%v", res)
 	*/
+
+	/* Delete example
+
+	filter := map[string]string{
+		"type" : "cond",
+		"column" : "rule_name",
+		"operator" : "=",
+		"value" : "testrule",
+	}
+
+	res, err := query.Delete().From("prerouting").Where(filter).GetInt()
+	if err != nil {
+		log.Println(err)
+	}
+
+	log.Printf("%v", res)
+	 */
 }
 
 

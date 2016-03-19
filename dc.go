@@ -4,6 +4,10 @@ import (
 	"errors"
 )
 
+var (
+	errUnknownTable = errors.New("Table id not found in dictionary")
+)
+
 type methodType string
 
 const (
@@ -36,7 +40,7 @@ func GetTableIdByName(n string) (id string, err error) {
 	if id, ok := tableIds[n]; ok {
 		return id, nil
 	} else {
-		return "", errors.New("Attempt to search for unknown table")
+		return "", errUnknownTable
 	}
 }
 

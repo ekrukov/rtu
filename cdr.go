@@ -22,6 +22,7 @@ type CDR struct {
 	BILL_ANI                 string
 	BILL_DNIS                string
 	SIG_NODE_NAME            string
+	SRC_GATEKEEPER_ADDRESS   string
 	REMOTE_SRC_SIG_ADDRESS   string
 	REMOTE_DST_SIG_ADDRESS   string
 	REMOTE_SRC_MEDIA_ADDRESS string
@@ -40,6 +41,7 @@ type CDR struct {
 	SRC_OUT_LEG_CALL_ID      string
 	SRC_USER                 string
 	DST_USER                 string
+	RADIUS_USER              string
 	SRC_NAME                 string
 	DST_NAME                 string
 	DP_NAME                  string
@@ -74,8 +76,10 @@ type CDR struct {
 	DST_MIN_JITTER_SIZE      string
 	DST_MAX_JITTER_SIZE      string
 	LAST_CDR                 string
+	Q850_REASON              string
 	IN_CPC                   string
 	OUT_CPC                  string
+	PASS_FROM                string
 	IN_ZONE                  string
 	OUT_ZONE                 string
 	DISCONNECT_INITIATOR     string
