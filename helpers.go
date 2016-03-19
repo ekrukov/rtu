@@ -2,11 +2,33 @@ package rtu
 
 import (
 	"errors"
+	"strings"
 )
 
 var (
 	errFilterUnknownField = errors.New("Unknown field in filter map")
+	errFilterUnknownCondition = errors.New("Unknown condition in filter string")
 )
+
+func stringToFilter(s string) (f *requestFilter, err error) {
+	f = new(requestFilter)
+	f.P_filter.Type_ = "cond"
+	for _, cond := range filterConditions {
+		if condPosition := strings.Index(s, cond); condPosition != -1 {
+			valuePos := len(cond) + condPosition
+			column := strings.TrimSpace(s[:condPosition])
+			value := strings.TrimSpace(s[valuePos:])
+			if cond == "like" || cond == "not like" {
+				value = "%" + "%"
+			}
+			f.P_filter.Column = column
+			f.P_filter.Operator = cond
+			f.P_filter.Value = value
+			return f, nil
+		}
+	}
+	return f, errFilterUnknownCondition
+}
 
 func mapToSort(m map[string]Ordertype) (s *requestSort, err error) {
 	items := []requestSortItem{}

@@ -16,18 +16,11 @@ func main() {
 
 	/* Select example */
 
-	filter := map[string]string{
-		"type" : "cond",
-		"column" : "in_ani",
-		"operator" : "=",
-		"value" : "11111111111",
-	}
-
 	sort := map[string]rtu.Ordertype{
 		"cdr_id" : rtu.OrdertypeAsc,
 	}
 
-	res, err := query.Select().From("cdrH").Where(filter).OrderBy(sort).Limit(2).Offset(1).GetCDRs()
+	res, err := query.Select().From("cdrH").Where("in_ani = 11111111111").OrderBy(sort).Limit(2).Offset(1).GetCDRs()
 
 	if err != nil {
 		log.Println(err)
@@ -51,14 +44,7 @@ func main() {
 
 	/* Count example
 
-	filter := map[string]string{
-		"type" : "cond",
-		"column" : "in_ani",
-		"operator" : "=",
-		"value" : "11111111111",
-	}
-
-	res, err := query.Count("cdrH").Where(filter).GetInt()
+	res, err := query.Count("cdrH").Where("in_ani = 11111111111").GetInt()
 	if err != nil {
 		log.Println(err)
 	}
@@ -95,14 +81,7 @@ func main() {
 		},
 	}
 
-	filter := map[string]string{
-		"type" : "cond",
-		"column" : "rule_name",
-		"operator" : "=",
-		"value" : "testrule",
-	}
-
-	res, err := query.Update("prerouting").Set(rowset).Where(filter).GetInt()
+	res, err := query.Update("prerouting").Set(rowset).Where("rule_name=testrule").GetInt()
 
 	if err != nil {
 		log.Println(err)
@@ -113,14 +92,8 @@ func main() {
 
 	/* Delete example
 
-	filter := map[string]string{
-		"type" : "cond",
-		"column" : "rule_name",
-		"operator" : "=",
-		"value" : "testrule",
-	}
 
-	res, err := query.Delete().From("prerouting").Where(filter).GetInt()
+	res, err := query.Delete().From("prerouting").Where("rule_name=testrule").GetInt()
 	if err != nil {
 		log.Println(err)
 	}

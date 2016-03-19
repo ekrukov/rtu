@@ -97,8 +97,13 @@ func (q *queryBuilder) Values(rowset []map[string]string) *queryBuilder {
 	return q
 }
 
-func (q *queryBuilder) Where(filter map[string]string) *queryBuilder {
+func (q *queryBuilder) Filter(filter map[string]string) *queryBuilder {
 	q.Request.Filter, q.err = mapToFilter(filter)
+	return q
+}
+
+func (q *queryBuilder) Where(f string) *queryBuilder {
+	q.Request.Filter, q.err = stringToFilter(f)
 	return q
 }
 

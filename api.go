@@ -23,15 +23,15 @@ type requestFilter struct {
 			 Column   string `xml:"column,omitempty"`
 			 Operator string `xml:"operator,omitempty"`
 			 Value    string `xml:"value,omitempty"`
-			 //Childs   childFilterArray `xml:"childs,omitempty"`
+			 Childs   childFilterArray `xml:"childs,omitempty"`
 		 }
 }
 // TODO only simple filter
-/*
+
 type childFilterArray struct {
-	XMLName xml.Name `xml:"http://mfisoft.ru/voip/service/soap filter_childs_arr"`
+	//XMLName xml.Name `xml:"http://mfisoft.ru/voip/service/soap filter_childs_arr"`
 	Filters []requestFilter `xml:"http://mfisoft.ru/voip/service/soap item"`
-}*/
+}
 
 type requestSort struct {
 	P_sort struct {
