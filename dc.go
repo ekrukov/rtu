@@ -7,6 +7,11 @@ import (
 var (
 	errUnknownTable = errors.New("Table id not found in dictionary")
 )
+var queryDefaultLimit int = 1000
+
+var urlMake = func(s string) string {
+	return "https://" + s + "/service/service.php?soap"
+}
 
 type methodType string
 

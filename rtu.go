@@ -8,7 +8,7 @@ func NewRTUClient(s, l, p string) *RTUClient {
 	client := new(RTUClient)
 	clientAuth := &soapAuth{Login: l, Password: p}
 	client.soapClient = &soapClient{
-		url: "https://" + s + "/service/service.php?soap",
+		url: urlMake(s),
 		tls:  true,
 		auth: clientAuth,
 	}
@@ -20,7 +20,7 @@ func (r *RTUClient) Query() *queryBuilder {
 	defaultRequest := requestData{
 		Table: &requestTable{},
 		Limit: &requestLimit{
-			P_limit: 1000,
+			P_limit: queryDefaultLimit,
 		},
 		Offset: &requestOffset{
 			P_offset: 0,
