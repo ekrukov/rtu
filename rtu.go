@@ -1,7 +1,5 @@
 package rtu
 
-import ()
-
 type RTUClient struct {
 	soapClient *soapClient
 }
@@ -19,11 +17,18 @@ func NewRTUClient(s, l, p string) *RTUClient {
 
 // Create new query with current client
 func (r *RTUClient) Query() *queryBuilder {
+	defaultRequest := requestData{
+		Table: &requestTable{},
+		Limit: &requestLimit{
+			P_limit: 1000,
+		},
+		Offset: &requestOffset{
+			P_offset: 0,
+		},
+	}
 	return &queryBuilder{
-		client: r.soapClient,
-		tableId: "",
-		limit: 1000,
-		offset: 0,
+		Client: r.soapClient,
+		Request: &defaultRequest,
 	}
 }
 

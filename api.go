@@ -17,14 +17,14 @@ type requestTable struct {
 }
 
 type requestFilter struct {
-	P_filter   struct {
-			   XMLName  xml.Name `xml:"http://mfisoft.ru/voip/service/soap p_filter"`
-			   Type_    string `xml:"type,omitempty"`
-			   Column   string `xml:"column,omitempty"`
-			   Operator string `xml:"operator,omitempty"`
-			   Value    string `xml:"value,omitempty"`
-			   //Childs   childFilterArray `xml:"childs,omitempty"`
-		   }
+	P_filter struct {
+			 XMLName  xml.Name `xml:"http://mfisoft.ru/voip/service/soap p_filter"`
+			 Type_    string `xml:"type,omitempty"`
+			 Column   string `xml:"column,omitempty"`
+			 Operator string `xml:"operator,omitempty"`
+			 Value    string `xml:"value,omitempty"`
+			 //Childs   childFilterArray `xml:"childs,omitempty"`
+		 }
 }
 // TODO only simple filter
 /*
@@ -34,10 +34,10 @@ type childFilterArray struct {
 }*/
 
 type requestSort struct {
-	P_sort     struct {
-			   XMLName xml.Name `xml:"http://mfisoft.ru/voip/service/soap p_sort"`
-			   Items   []requestSortItem `xml:"http://mfisoft.ru/voip/service/soap item"`
-		   }
+	P_sort struct {
+		       XMLName xml.Name `xml:"http://mfisoft.ru/voip/service/soap p_sort"`
+		       Items   []requestSortItem `xml:"http://mfisoft.ru/voip/service/soap item"`
+	       }
 }
 
 type requestSortItem struct {
@@ -47,10 +47,10 @@ type requestSortItem struct {
 }
 
 type requestRowset struct {
-	P_rowset   struct {
-			   XMLName xml.Name `xml:"http://mfisoft.ru/voip/service/soap p_rowset"`
-			   Rows    []requestRow `xml:"item"`
-		   }
+	P_rowset struct {
+			 XMLName xml.Name `xml:"http://mfisoft.ru/voip/service/soap p_rowset"`
+			 Rows    []requestRow `xml:"item"`
+		 }
 }
 
 type requestRow struct {
@@ -65,30 +65,30 @@ type requestColumn struct {
 }
 
 type requestLimit struct {
-	P_limit    int `xml:"p_limit"`
+	P_limit int `xml:"p_limit"`
 }
 
 type requestOffset struct {
-	P_offset   int `xml:"p_offset"`
+	P_offset int `xml:"p_offset"`
 }
 
 //
 //Response structures
 //
 
-type responseString struct  {
-	Result  string `xml:"result"`
+type responseString struct {
+	Result string `xml:"result"`
 }
 
-type responseInt struct  {
-	Result  int `xml:"result"`
+type responseInt struct {
+	Result int `xml:"result"`
 }
 
 type responseRowset struct {
-	Result  struct{
-		XMLName xml.Name `xml:"result"`
-		Items []responseRow `xml:"item"`
-		}
+	Result struct {
+		       XMLName xml.Name `xml:"result"`
+		       Items   []responseRow `xml:"item"`
+	       }
 }
 
 type responseRow struct {
@@ -107,7 +107,7 @@ type responseColumn struct {
 //
 
 type selectRowsetRequest struct {
-	XMLName    xml.Name `xml:"http://mfisoft.ru/voip/service/soap selectRowset"`
+	XMLName xml.Name `xml:"http://mfisoft.ru/voip/service/soap selectRowset"`
 	requestTable
 	requestFilter
 	requestSort
@@ -125,7 +125,7 @@ type selectRowsetResponse struct {
  */
 
 type insertRowsetRequest struct {
-	XMLName    xml.Name `xml:"http://mfisoft.ru/voip/service/soap insertRowset"`
+	XMLName xml.Name `xml:"http://mfisoft.ru/voip/service/soap insertRowset"`
 	requestTable
 	requestRowset
 }
@@ -140,7 +140,7 @@ type insertRowsetResponse struct {
  */
 
 type updateRowsetRequest struct {
-	XMLName    xml.Name `xml:"http://mfisoft.ru/voip/service/soap updateRowset"`
+	XMLName xml.Name `xml:"http://mfisoft.ru/voip/service/soap updateRowset"`
 	requestTable
 	requestRowset
 	requestFilter
@@ -155,7 +155,7 @@ type updateRowsetResponse struct {
  */
 
 type deleteRowsetRequest struct {
-	XMLName    xml.Name `xml:"http://mfisoft.ru/voip/service/soap deleteRowset"`
+	XMLName xml.Name `xml:"http://mfisoft.ru/voip/service/soap deleteRowset"`
 	requestTable
 	requestRowset
 	requestFilter
@@ -171,7 +171,7 @@ type deleteRowsetResponse struct {
  */
 
 type countRowsetRequest struct {
-	XMLName    xml.Name `xml:"http://mfisoft.ru/voip/service/soap countRowset"`
+	XMLName xml.Name `xml:"http://mfisoft.ru/voip/service/soap countRowset"`
 	requestTable
 	requestFilter
 }
@@ -186,7 +186,7 @@ type countRowsetResponse struct {
  */
 
 type describeColumnsRequest struct {
-	XMLName    xml.Name `xml:"http://mfisoft.ru/voip/service/soap describeColumns"`
+	XMLName xml.Name `xml:"http://mfisoft.ru/voip/service/soap describeColumns"`
 	requestTable
 }
 
@@ -201,7 +201,7 @@ type describeColumnsResponse struct {
  */
 
 type getTableByTitleRequest struct {
-	XMLName    xml.Name `xml:"http://mfisoft.ru/voip/service/soap getTableByTitle"`
+	XMLName xml.Name `xml:"http://mfisoft.ru/voip/service/soap getTableByTitle"`
 	requestTable
 }
 
@@ -211,7 +211,7 @@ type getTableByTitleResponse struct {
 }
 
 type getColumnLookupRequest struct {
-	XMLName     xml.Name `xml:"http://mfisoft.ru/voip/service/soap getColumnLookup"`
+	XMLName xml.Name `xml:"http://mfisoft.ru/voip/service/soap getColumnLookup"`
 	requestTable
 	requestColumnName
 }

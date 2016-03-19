@@ -11,7 +11,6 @@ import (
 	"net"
 )
 
-
 var timeout = time.Duration(30 * time.Second)
 
 func dialTimeout(network, addr string) (net.Conn, error) {
@@ -100,7 +99,6 @@ func (s *soapClient) Call(soapMethod methodType, request, response interface{}) 
 
 	return nil
 }
-
 
 type soapEnvelope struct {
 	XMLName xml.Name `xml:"http://schemas.xmlsoap.org/soap/envelope/ Envelope"`

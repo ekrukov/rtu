@@ -22,7 +22,6 @@ const (
 	OrdertypeDesc Ordertype = "desc"
 )
 
-
 var tableIds = map[string]string{
 	"cdrH": "02.2205.01",
 	"cdrD": "02.2206.01",
