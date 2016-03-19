@@ -26,8 +26,6 @@ const (
 
 var filterConditions = []string{"<=", ">=", "<>", "like", "not like", "regexp", ">", "<", "="}
 
-var filterTypes = []string{"cond", "agg"}
-
 type Ordertype string
 
 const (

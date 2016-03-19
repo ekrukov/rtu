@@ -12,7 +12,7 @@ var (
 
 func stringToFilter(s string) (f *requestFilter, err error) {
 	f = new(requestFilter)
-	f.P_filter.Type_ = "cond"
+	f.Item.Type_ = "cond"
 	for _, cond := range filterConditions {
 		if condPosition := strings.Index(s, cond); condPosition != -1 {
 			valuePos := len(cond) + condPosition
@@ -21,9 +21,9 @@ func stringToFilter(s string) (f *requestFilter, err error) {
 			if cond == "like" || cond == "not like" {
 				value = "%" + value + "%"
 			}
-			f.P_filter.Column = column
-			f.P_filter.Operator = cond
-			f.P_filter.Value = value
+			f.Item.Column = column
+			f.Item.Operator = cond
+			f.Item.Value = value
 			return f, nil
 		}
 	}
@@ -43,12 +43,24 @@ func mapToSort(m map[string]Ordertype) (s *requestSort, err error) {
 	return s, err
 }
 
+func sliceToChildFilters(s []string) (fi []requestFilterItem, err error) {
+	fi = []requestFilterItem{}
+	for _, sf := range s {
+		cf, err := stringToFilter(sf)
+		if err != nil {
+			return nil, err
+		}
+		fi = append(fi, cf.Item)
+	}
+	return fi, nil
+}
+
 func mapToFilter(m map[string]string) (f *requestFilter, err error) {
 	f = new(requestFilter)
-	f.P_filter.Type_, err = checkInMap(m, "type")
-	f.P_filter.Column, err = checkInMap(m, "column")
-	f.P_filter.Operator, err = checkInMap(m, "operator")
-	f.P_filter.Value, err = checkInMap(m, "value")
+	f.Item.Type_, err = checkInMap(m, "type")
+	f.Item.Column, err = checkInMap(m, "column")
+	f.Item.Operator, err = checkInMap(m, "operator")
+	f.Item.Value, err = checkInMap(m, "value")
 	return f, err
 }
 

@@ -16,21 +16,21 @@ type requestTable struct {
 	P_table_hi string `xml:"p_table_hi"`
 }
 
-type requestFilter struct {
-	P_filter struct {
-			 XMLName  xml.Name `xml:"http://mfisoft.ru/voip/service/soap p_filter"`
-			 Type_    string `xml:"type,omitempty"`
-			 Column   string `xml:"column,omitempty"`
-			 Operator string `xml:"operator,omitempty"`
-			 Value    string `xml:"value,omitempty"`
-			 Childs   childFilterArray `xml:"childs,omitempty"`
-		 }
+type requestFilterItem struct {
+	XMLName  xml.Name `xml:"http://mfisoft.ru/voip/service/soap p_filter"`
+	Type_    string `xml:"type,omitempty"`
+	Column   string `xml:"column,omitempty"`
+	Operator string `xml:"operator,omitempty"`
+	Value    string `xml:"value,omitempty"`
+	Childs   requestFilterChildsArr `xml:"childs,omitempty"`
 }
-// TODO only simple filter
 
-type childFilterArray struct {
-	//XMLName xml.Name `xml:"http://mfisoft.ru/voip/service/soap filter_childs_arr"`
-	Filters []requestFilter `xml:"http://mfisoft.ru/voip/service/soap item"`
+type requestFilter struct {
+	Item requestFilterItem
+}
+
+type requestFilterChildsArr struct {
+	Items []requestFilterItem
 }
 
 type requestSort struct {

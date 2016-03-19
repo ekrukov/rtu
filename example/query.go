@@ -14,13 +14,32 @@ func main() {
 	query := rtu.NewRTUClient(serverName, serverLogin, serverPass).Query()
 
 
-	/* Select example */
+	/*Simple select example */
 
 	sort := map[string]rtu.Ordertype{
 		"cdr_id" : rtu.OrdertypeAsc,
 	}
 
 	res, err := query.Select().From("cdrH").Where("in_ani = 11111111111").OrderBy(sort).Limit(2).Offset(1).GetCDRs()
+
+	if err != nil {
+		log.Println(err)
+	}
+
+	log.Printf("%+v", res)
+
+	/*Select with complex filter example
+
+	sort := map[string]rtu.Ordertype{
+		"cdr_id" : rtu.OrdertypeAsc,
+	}
+
+	filters := []string {
+		"in_ani=12345678901",
+		"out_ani=10987654321",
+	}
+
+	res, err := query.Select().From("cdrH").Filters("and", filters).OrderBy(sort).Limit(2).Offset(1).GetCDRs()
 
 	if err != nil {
 		log.Println(err)
