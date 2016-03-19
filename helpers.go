@@ -4,24 +4,25 @@ import (
 	"errors"
 )
 
-func MapToSort(m map[string]Ordertype) (s *Sort, err error) {
-	items := []Sortitem{}
+func MapToSort(m map[string]Ordertype) (s *requestSort, err error) {
+	items := []requestSortItem{}
 	for column, dir := range m {
-		items = append(items, Sortitem{
+		items = append(items, requestSortItem{
 			Column: column,
 			Dir: dir,
 		})
 	}
-	s = &Sort{Items: items}
+	s = new(requestSort)
+	s.P_sort.Items = items
 	return s, err
 }
 
-func MapToFilter(m map[string]string) (f *Filter, err error) {
-	f = new(Filter)
-	f.Type_, err = checkInMap(m, "type")
-	f.Column, err = checkInMap(m, "column")
-	f.Operator, err = checkInMap(m, "operator")
-	f.Value, err = checkInMap(m, "value")
+func MapToFilter(m map[string]string) (f *requestFilter, err error) {
+	f = new(requestFilter)
+	f.P_filter.Type_, err = checkInMap(m, "type")
+	f.P_filter.Column, err = checkInMap(m, "column")
+	f.P_filter.Operator, err = checkInMap(m, "operator")
+	f.P_filter.Value, err = checkInMap(m, "value")
 	return f, err
 }
 
@@ -32,20 +33,20 @@ func checkInMap(m map[string]string, key string) (value string, err error) {
 	return "", errors.New("Unknown field in filter map")
 }
 
-func MapToRow(m map[string]string) (r *Row, err error) {
-	columnMap := []Column{}
+func MapToRow(m map[string]string) (r *requestRow, err error) {
+	columnMap := []requestColumn{}
 	for key, value := range m {
-		columnMap = append(columnMap, Column{
+		columnMap = append(columnMap, requestColumn{
 			Name: key,
 			Value: value,
 		})
 	}
-	r = &Row{Items: columnMap}
+	r = &requestRow{Items: columnMap}
 	return r, err
 }
 
-func MapsToRowset(m []map[string]string) (r *Rowset, err error) {
-	rows := []Row{}
+func MapsToRowset(m []map[string]string) (r *requestRowset, err error) {
+	rows := []requestRow{}
 	for _, row := range m {
 		rowMap, err := MapToRow(row)
 		rows = append(rows, *rowMap)
@@ -53,7 +54,8 @@ func MapsToRowset(m []map[string]string) (r *Rowset, err error) {
 			return nil, err
 		}
 	}
-	r = &Rowset{Rows: rows}
+	r = new(requestRowset)
+	r.P_rowset.Rows = rows
 	return r, err
 }
 

@@ -21,12 +21,12 @@ type RTUQuery struct {
 }
 
 type rawResult struct {
-	Describe *DescribeColumnsResponce //rows in result
-	Select   *SelectRowsetResponce    //rows in result
-	Insert   *InsertRowsetResponce    //int in result
-	Delete   *DeleteRowsetResponce    //int in result
-	Update   *UpdateRowsetResponce    //int in result
-	Count    *CountRowsetResponce     //int in result
+	Describe *DescribeColumnsResponse //rows in result
+	Select   *SelectRowsetResponse    //rows in result
+	Insert   *InsertRowsetResponse    //int in result
+	Delete   *DeleteRowsetResponse    //int in result
+	Update   *UpdateRowsetResponse    //int in result
+	Count    *CountRowsetResponse     //int in result
 }
 
 func (q *RTUQuery) Select() *RTUQuery {
@@ -130,20 +130,19 @@ func (q *RTUQuery) queryExec() error {
 	q.result = new(rawResult)
 	switch q.method {
 	case SelectMethod:
-		request := SelectRowsetRequest{
-			P_limit: q.limit,
-			P_offset: q.offset,
-		}
+		request :=new(SelectRowsetRequest)
+		request.requestLimit.P_limit = q.limit
+		request.requestOffset.P_offset = q.offset
 		if q.tableId == "" {
 			return errors.New("need table for select")
 		}
-		request.P_table_hi = q.tableId
+		request.requestTable.P_table_hi = q.tableId
 		if q.filter != nil {
 			filter, err := MapToFilter(q.filter)
 			if err != nil {
 				return err
 			}
-			request.P_filter = *filter
+			request.requestFilter = *filter
 		} else {
 			return errors.New("need filter for select")
 		}
@@ -152,7 +151,7 @@ func (q *RTUQuery) queryExec() error {
 			if err != nil {
 				return err
 			}
-			request.P_sort = *sort
+			request.requestSort = *sort
 		}
 
 		err := q.client.Call(q.method, &request, &q.result.Select)
@@ -160,9 +159,9 @@ func (q *RTUQuery) queryExec() error {
 			return err
 		}
 	case DescribeMethod:
-		err := q.client.Call(q.method, &DescribeColumnsRequest{
-			P_table_hi: q.tableId,
-		}, &q.result.Describe)
+		request := new(DescribeColumnsRequest)
+		request.requestTable.P_table_hi = q.tableId
+		err := q.client.Call(q.method, &request, &q.result.Describe)
 		if err != nil {
 			return err
 		}
@@ -171,10 +170,10 @@ func (q *RTUQuery) queryExec() error {
 		if err != nil {
 			return err
 		}
-		err = q.client.Call(q.method, &CountRowsetRequest{
-			P_table_hi: q.tableId,
-			Filter: *filter,
-		}, &q.result.Count)
+		request := new(CountRowsetRequest)
+		request.requestTable.P_table_hi = q.tableId
+		request.requestFilter = *filter
+		err = q.client.Call(q.method, &request, &q.result.Count)
 		if err != nil {
 			return err
 		}
@@ -183,10 +182,10 @@ func (q *RTUQuery) queryExec() error {
 		if err != nil {
 			return err
 		}
-		err = q.client.Call(q.method, &InsertRowsetRequest{
-			P_table_hi: q.tableId,
-			P_rowset: *rowset,
-		}, &q.result.Insert)
+		request := new(InsertRowsetRequest)
+		request.requestTable.P_table_hi = q.tableId
+		request.requestRowset = *rowset
+		err = q.client.Call(q.method, &request, &q.result.Insert)
 		if err != nil {
 			return err
 		}
@@ -199,11 +198,11 @@ func (q *RTUQuery) queryExec() error {
 		if err != nil {
 			return err
 		}
-		err = q.client.Call(q.method, &UpdateRowsetRequest{
-			P_table_hi: q.tableId,
-			P_rowset: *rowset,
-			Filter: *filter,
-		}, &q.result.Update)
+		request := new(UpdateRowsetRequest)
+		request.requestTable.P_table_hi = q.tableId
+		request.requestRowset = *rowset
+		request.requestFilter = *filter
+		err = q.client.Call(q.method, &request, &q.result.Update)
 		if err != nil {
 			return err
 		}
@@ -222,7 +221,7 @@ func (q *RTUQuery) GetRaw() (*rawResult, error) {
 	return q.result, nil
 }
 
-func (q *RTUQuery) GetRows() ([]ResponceRow, error) {
+func (q *RTUQuery) GetRows() ([]responseRow, error) {
 	err := q.queryExec()
 	if err != nil {
 		log.Fatal(err)
@@ -230,11 +229,11 @@ func (q *RTUQuery) GetRows() ([]ResponceRow, error) {
 	}
 	switch q.method {
 	case SelectMethod:
-		return q.result.Select.Result.Rows, nil
+		return q.result.Select.Result.Items, nil
 	case DescribeMethod:
-		return q.result.Describe.Result.Rows, nil
+		return q.result.Describe.Result.Items, nil
 	}
-	return nil, errors.New("Unsupported method for rows responce")
+	return nil, errors.New("Unsupported method for rows response")
 }
 
 func (q *RTUQuery) GetInt() (int, error) {
@@ -253,7 +252,7 @@ func (q *RTUQuery) GetInt() (int, error) {
 	case CountMethod:
 		return q.result.Count.Result, nil
 	}
-	return 0, errors.New("Unsupported method for int responce")
+	return 0, errors.New("Unsupported method for int response")
 }
 
 func (q *RTUQuery) GetCDRs() (cs *CDRs, err error) {
