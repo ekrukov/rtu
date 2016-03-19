@@ -42,7 +42,7 @@ func (s *soapClient) Call(soapMethod methodType, request, response interface{}) 
 		return err
 	}
 
-	log.Println(buffer.String())
+	//log.Println(buffer.String())
 
 	req, err := http.NewRequest("POST", s.url, buffer)
 	if err != nil {
