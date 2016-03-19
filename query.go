@@ -12,7 +12,7 @@ var (
 	errSetWOUpdate = errors.New("RTU Query: attempt to Set without Update")
 	errFromWOSelectOrDelete = errors.New("RTU Query: attempt to From without Select or Delete")
 	errIntoWOInsert = errors.New("RTU Query: attempt to Into action without Insert")
-	errMethodNotFOund = errors.New("RTU Query: method not found")
+	errMethodNotFound = errors.New("RTU Query: method not found")
 	errMethodUnsupport = errors.New("RTU Query: method not support in this context")
 )
 
@@ -246,7 +246,7 @@ func (q *queryBuilder) queryExec() error {
 			return err
 		}
 	default:
-		return errMethodNotFOund
+		return errMethodNotFound
 	}
 	return nil
 }

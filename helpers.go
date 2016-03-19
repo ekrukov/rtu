@@ -55,15 +55,6 @@ func sliceToChildFilters(s []string) (fi []requestFilterItem, err error) {
 	return fi, nil
 }
 
-func mapToFilter(m map[string]string) (f *requestFilter, err error) {
-	f = new(requestFilter)
-	f.Item.Type_, err = checkInMap(m, "type")
-	f.Item.Column, err = checkInMap(m, "column")
-	f.Item.Operator, err = checkInMap(m, "operator")
-	f.Item.Value, err = checkInMap(m, "value")
-	return f, err
-}
-
 func checkInMap(m map[string]string, key string) (value string, err error) {
 	if value, ok := m[key]; ok {
 		return value, nil
