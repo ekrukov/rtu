@@ -19,7 +19,7 @@ func stringToFilter(s string) (f *requestFilter, err error) {
 			column := strings.TrimSpace(s[:condPosition])
 			value := strings.TrimSpace(s[valuePos:])
 			if cond == "like" || cond == "not like" {
-				value = "%" + "%"
+				value = "%" + value + "%"
 			}
 			f.P_filter.Column = column
 			f.P_filter.Operator = cond
