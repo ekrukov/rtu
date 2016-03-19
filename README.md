@@ -8,4 +8,4 @@ rtu (mvts3g) api client
 TODO
 
 * Templates fot methods (Insert(%template%) for example)
-
+* Make struct and parser for complex filters
