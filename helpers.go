@@ -4,6 +4,10 @@ import (
 	"errors"
 )
 
+var (
+	errFilterUnknownField = errors.New("Unknown field in filter map")
+)
+
 func mapToSort(m map[string]Ordertype) (s *requestSort, err error) {
 	items := []requestSortItem{}
 	for column, dir := range m {
@@ -30,7 +34,7 @@ func checkInMap(m map[string]string, key string) (value string, err error) {
 	if value, ok := m[key]; ok {
 		return value, nil
 	}
-	return "", errors.New("Unknown field in filter map")
+	return "", errFilterUnknownField
 }
 
 func mapToRow(m map[string]string) (r *requestRow, err error) {
