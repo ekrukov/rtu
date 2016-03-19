@@ -4,7 +4,7 @@ import (
 	"errors"
 )
 
-func MapToSort(m map[string]Ordertype) (s *requestSort, err error) {
+func mapToSort(m map[string]Ordertype) (s *requestSort, err error) {
 	items := []requestSortItem{}
 	for column, dir := range m {
 		items = append(items, requestSortItem{
@@ -17,7 +17,7 @@ func MapToSort(m map[string]Ordertype) (s *requestSort, err error) {
 	return s, err
 }
 
-func MapToFilter(m map[string]string) (f *requestFilter, err error) {
+func mapToFilter(m map[string]string) (f *requestFilter, err error) {
 	f = new(requestFilter)
 	f.P_filter.Type_, err = checkInMap(m, "type")
 	f.P_filter.Column, err = checkInMap(m, "column")
@@ -33,7 +33,7 @@ func checkInMap(m map[string]string, key string) (value string, err error) {
 	return "", errors.New("Unknown field in filter map")
 }
 
-func MapToRow(m map[string]string) (r *requestRow, err error) {
+func mapToRow(m map[string]string) (r *requestRow, err error) {
 	columnMap := []requestColumn{}
 	for key, value := range m {
 		columnMap = append(columnMap, requestColumn{
@@ -45,10 +45,10 @@ func MapToRow(m map[string]string) (r *requestRow, err error) {
 	return r, err
 }
 
-func MapsToRowset(m []map[string]string) (r *requestRowset, err error) {
+func mapsToRowset(m []map[string]string) (r *requestRowset, err error) {
 	rows := []requestRow{}
 	for _, row := range m {
-		rowMap, err := MapToRow(row)
+		rowMap, err := mapToRow(row)
 		rows = append(rows, *rowMap)
 		if err != nil {
 			return nil, err

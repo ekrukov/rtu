@@ -5,9 +5,9 @@ import (
 	"errors"
 )
 
-type RTUQuery struct {
-	client         *SOAPClient
-	method         Methodtype
+type queryBuilder struct {
+	client         *soapClient
+	method         methodType
 	tableName      string
 	tableId        string
 	filter         map[string]string
@@ -21,40 +21,40 @@ type RTUQuery struct {
 }
 
 type rawResult struct {
-	Describe *DescribeColumnsResponse //rows in result
-	Select   *SelectRowsetResponse    //rows in result
-	Insert   *InsertRowsetResponse    //int in result
-	Delete   *DeleteRowsetResponse    //int in result
-	Update   *UpdateRowsetResponse    //int in result
-	Count    *CountRowsetResponse     //int in result
+	Describe *describeColumnsResponse //rows in result
+	Select   *selectRowsetResponse    //rows in result
+	Insert   *insertRowsetResponse    //int in result
+	Delete   *deleteRowsetResponse    //int in result
+	Update   *updateRowsetResponse    //int in result
+	Count    *countRowsetResponse     //int in result
 }
 
-func (q *RTUQuery) Select() *RTUQuery {
-	q.method = SelectMethod
+func (q *queryBuilder) Select() *queryBuilder {
+	q.method = selectMethod
 	return q
 }
 
-func (q *RTUQuery) Update(table string) *RTUQuery {
-	q.method = UpdateMethod
+func (q *queryBuilder) Update(table string) *queryBuilder {
+	q.method = updateMethod
 	q.tableId, q.err = GetTableIdByName(table)
 	return q
 }
 
-func (q *RTUQuery) Delete() *RTUQuery {
-	q.method = DeleteMethod
+func (q *queryBuilder) Delete() *queryBuilder {
+	q.method = deleteMethod
 	return q
 }
 
 //TODO template as in param => q.InsertTemplate
 
-func (q *RTUQuery) Insert() *RTUQuery {
-	q.method = InsertMethod
+func (q *queryBuilder) Insert() *queryBuilder {
+	q.method = insertMethod
 	return q
 }
 
-func (q *RTUQuery) Set(rowset []map[string]string) *RTUQuery {
-	if q.method != UpdateMethod {
-		errorString := "RTUQuery builder error, set without update"
+func (q *queryBuilder) Set(rowset []map[string]string) *queryBuilder {
+	if q.method != updateMethod {
+		errorString := "queryBuilder builder error, set without update"
 		q.err = errors.New(errorString)
 		log.Fatal(errorString)
 	} else {
@@ -63,74 +63,74 @@ func (q *RTUQuery) Set(rowset []map[string]string) *RTUQuery {
 	return q
 }
 
-func (q *RTUQuery) From(table string) *RTUQuery {
-	if q.method == SelectMethod || q.method == DeleteMethod {
+func (q *queryBuilder) From(table string) *queryBuilder {
+	if q.method == selectMethod || q.method == deleteMethod {
 		q.tableId, q.err = GetTableIdByName(table)
 	} else {
-		errorString := "RTUQuery builder error, from without select or delete"
+		errorString := "queryBuilder builder error, from without select or delete"
 		q.err = errors.New(errorString)
 		log.Fatal(errorString)
 	}
 	return q
 }
 
-func (q *RTUQuery) Into(table string) *RTUQuery {
-	if q.method == InsertMethod {
+func (q *queryBuilder) Into(table string) *queryBuilder {
+	if q.method == insertMethod {
 		q.tableId, q.err = GetTableIdByName(table)
 	} else {
-		errorString := "RTUQuery builder error, into without insert"
+		errorString := "queryBuilder builder error, into without insert"
 		q.err = errors.New(errorString)
 		log.Fatal(errorString)
 	}
 	return q
 }
 
-func (q *RTUQuery) Values(rowset []map[string]string) *RTUQuery {
+func (q *queryBuilder) Values(rowset []map[string]string) *queryBuilder {
 	q.rowset = rowset
 	return q
 }
 
-func (q *RTUQuery) Where(filter map[string]string) *RTUQuery {
+func (q *queryBuilder) Where(filter map[string]string) *queryBuilder {
 	q.filter = filter
 	return q
 }
 
-func (q *RTUQuery) OrderBy(sort map[string]Ordertype) *RTUQuery {
+func (q *queryBuilder) OrderBy(sort map[string]Ordertype) *queryBuilder {
 	q.sort = sort
 	return q
 }
 
-func (q *RTUQuery) Limit(limit int) *RTUQuery {
+func (q *queryBuilder) Limit(limit int) *queryBuilder {
 	q.limit = limit
 	return q
 }
 
-func (q *RTUQuery) Offset(offset int) *RTUQuery {
+func (q *queryBuilder) Offset(offset int) *queryBuilder {
 	q.offset = offset
 	return q
 }
 
-func (q *RTUQuery) Describe(table string) *RTUQuery {
-	q.method = DescribeMethod
+func (q *queryBuilder) Describe(table string) *queryBuilder {
+	q.method = describeMethod
 	q.tableId, q.err = GetTableIdByName(table)
 	return q
 }
 
-func (q *RTUQuery) Count(table string, filter map[string]string) *RTUQuery {
-	q.method = CountMethod
+func (q *queryBuilder) Count(table string, filter map[string]string) *queryBuilder {
+	q.method = countMethod
 	q.tableId, q.err = GetTableIdByName(table)
 	q.filter = filter
 	return q
 }
 
-func (q *RTUQuery) queryExec() error {
+func (q *queryBuilder) queryExec() error {
 	if q.err != nil {
 		return q.err
 	}
 	q.result = new(rawResult)
 	switch q.method {
-	case SelectMethod:
-		request :=new(SelectRowsetRequest)
+	case selectMethod:
+		request :=new(selectRowsetRequest)
 		request.requestLimit.P_limit = q.limit
 		request.requestOffset.P_offset = q.offset
 		if q.tableId == "" {
@@ -138,7 +138,7 @@ func (q *RTUQuery) queryExec() error {
 		}
 		request.requestTable.P_table_hi = q.tableId
 		if q.filter != nil {
-			filter, err := MapToFilter(q.filter)
+			filter, err := mapToFilter(q.filter)
 			if err != nil {
 				return err
 			}
@@ -147,7 +147,7 @@ func (q *RTUQuery) queryExec() error {
 			return errors.New("need filter for select")
 		}
 		if q.sort != nil {
-			sort, err := MapToSort(q.sort)
+			sort, err := mapToSort(q.sort)
 			if err != nil {
 				return err
 			}
@@ -158,47 +158,47 @@ func (q *RTUQuery) queryExec() error {
 		if err != nil {
 			return err
 		}
-	case DescribeMethod:
-		request := new(DescribeColumnsRequest)
+	case describeMethod:
+		request := new(describeColumnsRequest)
 		request.requestTable.P_table_hi = q.tableId
 		err := q.client.Call(q.method, &request, &q.result.Describe)
 		if err != nil {
 			return err
 		}
-	case CountMethod:
-		filter, err := MapToFilter(q.filter)
+	case countMethod:
+		filter, err := mapToFilter(q.filter)
 		if err != nil {
 			return err
 		}
-		request := new(CountRowsetRequest)
+		request := new(countRowsetRequest)
 		request.requestTable.P_table_hi = q.tableId
 		request.requestFilter = *filter
 		err = q.client.Call(q.method, &request, &q.result.Count)
 		if err != nil {
 			return err
 		}
-	case InsertMethod:
-		rowset, err := MapsToRowset(q.rowset)
+	case insertMethod:
+		rowset, err := mapsToRowset(q.rowset)
 		if err != nil {
 			return err
 		}
-		request := new(InsertRowsetRequest)
+		request := new(insertRowsetRequest)
 		request.requestTable.P_table_hi = q.tableId
 		request.requestRowset = *rowset
 		err = q.client.Call(q.method, &request, &q.result.Insert)
 		if err != nil {
 			return err
 		}
-	case UpdateMethod:
-		filter, err := MapToFilter(q.filter)
+	case updateMethod:
+		filter, err := mapToFilter(q.filter)
 		if err != nil {
 			return err
 		}
-		rowset, err := MapsToRowset(q.rowset)
+		rowset, err := mapsToRowset(q.rowset)
 		if err != nil {
 			return err
 		}
-		request := new(UpdateRowsetRequest)
+		request := new(updateRowsetRequest)
 		request.requestTable.P_table_hi = q.tableId
 		request.requestRowset = *rowset
 		request.requestFilter = *filter
@@ -207,12 +207,12 @@ func (q *RTUQuery) queryExec() error {
 			return err
 		}
 	default:
-		return errors.New("RTUQuery run error action not found")
+		return errors.New("queryBuilder run error action not found")
 	}
 	return nil
 }
 
-func (q *RTUQuery) GetRaw() (*rawResult, error) {
+func (q *queryBuilder) GetRaw() (*rawResult, error) {
 	err := q.queryExec()
 	if err != nil {
 		log.Fatal(err)
@@ -221,42 +221,42 @@ func (q *RTUQuery) GetRaw() (*rawResult, error) {
 	return q.result, nil
 }
 
-func (q *RTUQuery) GetRows() ([]responseRow, error) {
+func (q *queryBuilder) GetRows() ([]responseRow, error) {
 	err := q.queryExec()
 	if err != nil {
 		log.Fatal(err)
 		return nil, err
 	}
 	switch q.method {
-	case SelectMethod:
+	case selectMethod:
 		return q.result.Select.Result.Items, nil
-	case DescribeMethod:
+	case describeMethod:
 		return q.result.Describe.Result.Items, nil
 	}
 	return nil, errors.New("Unsupported method for rows response")
 }
 
-func (q *RTUQuery) GetInt() (int, error) {
+func (q *queryBuilder) GetInt() (int, error) {
 	err := q.queryExec()
 	if err != nil {
 		log.Fatal(err)
 		return 0, err
 	}
 	switch q.method {
-	case InsertMethod:
+	case insertMethod:
 		return q.result.Insert.Result, nil
-	case UpdateMethod:
+	case updateMethod:
 		return q.result.Update.Result, nil
-	case DeleteMethod:
+	case deleteMethod:
 		return q.result.Delete.Result, nil
-	case CountMethod:
+	case countMethod:
 		return q.result.Count.Result, nil
 	}
 	return 0, errors.New("Unsupported method for int response")
 }
 
-func (q *RTUQuery) GetCDRs() (cs *CDRs, err error) {
-	if q.method != SelectMethod{
+func (q *queryBuilder) GetCDRs() (cs *CDRs, err error) {
+	if q.method != selectMethod{
 		err = errors.New("Only select method available for GetCDRs")
 		return nil, err
 	}
@@ -276,7 +276,7 @@ func (q *RTUQuery) GetCDRs() (cs *CDRs, err error) {
 	return cs, nil
 }
 
-func (q *RTUQuery) Print() {
+func (q *queryBuilder) Print() {
 	log.Printf("%+v", q)
 }
 

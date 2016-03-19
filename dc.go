@@ -4,15 +4,15 @@ import (
 	"errors"
 )
 
-type Methodtype string
+type methodType string
 
 const (
-	SelectMethod Methodtype = "SelectRowset"
-	InsertMethod Methodtype = "InsertRowset"
-	UpdateMethod Methodtype = "UpdateRowset"
-	DeleteMethod Methodtype = "DeleteRowset"
-	CountMethod Methodtype = "CountRowset"
-	DescribeMethod Methodtype = "DescribeColumns"
+	selectMethod methodType = "selectRowset"
+	insertMethod methodType = "insertRowset"
+	updateMethod methodType = "updateRowset"
+	deleteMethod methodType = "deleteRowset"
+	countMethod methodType = "countRowset"
+	describeMethod methodType = "describeColumns"
 )
 
 type Ordertype string

@@ -18,22 +18,14 @@ func dialTimeout(network, addr string) (net.Conn, error) {
 	return net.DialTimeout(network, addr, timeout)
 }
 
-type SOAPClient struct {
+type soapClient struct {
 	url  string
 	tls  bool
-	auth *SOAPAuth
+	auth *soapAuth
 }
 
-func NewSOAPClient(url string, tls bool, auth *SOAPAuth) *SOAPClient {
-	return &SOAPClient{
-		url:  url,
-		tls:  tls,
-		auth: auth,
-	}
-}
-
-func (s *SOAPClient) Call(soapMethod Methodtype, request, response interface{}) error {
-	envelope := SOAPEnvelope{}
+func (s *soapClient) Call(soapMethod methodType, request, response interface{}) error {
+	envelope := soapEnvelope{}
 
 	envelope.Header.Auth.Login = s.auth.Login
 	envelope.Header.Auth.Password = s.auth.Password
@@ -63,7 +55,7 @@ func (s *SOAPClient) Call(soapMethod Methodtype, request, response interface{}) 
 	}
 
 	req.Header.Add("Content-Type", "text/xml; charset=\"utf-8\"")
-	if Methodtype(soapMethod) != "" {
+	if methodType(soapMethod) != "" {
 		req.Header.Add("SOAPAction", string(soapMethod))
 	}
 
@@ -94,8 +86,8 @@ func (s *SOAPClient) Call(soapMethod Methodtype, request, response interface{}) 
 	}
 
 	//log.Println(string(rawbody))
-	respEnvelope := new(SOAPEnvelope)
-	respEnvelope.Body = SOAPBody{Content: response}
+	respEnvelope := new(soapEnvelope)
+	respEnvelope.Body = soapBody{Content: response}
 	err = xml.Unmarshal(rawbody, respEnvelope)
 	if err != nil {
 		return err
@@ -110,29 +102,29 @@ func (s *SOAPClient) Call(soapMethod Methodtype, request, response interface{}) 
 }
 
 
-type SOAPEnvelope struct {
+type soapEnvelope struct {
 	XMLName xml.Name `xml:"http://schemas.xmlsoap.org/soap/envelope/ Envelope"`
-	Header  SOAPHeader
-	Body    SOAPBody
+	Header  soapHeader
+	Body    soapBody
 }
 
-type SOAPHeader struct {
+type soapHeader struct {
 	XMLName xml.Name `xml:"http://schemas.xmlsoap.org/soap/envelope/ Header"`
-	Auth    SOAPAuthHeader
+	Auth    soapAuthHeader
 }
 
-type SOAPAuthHeader struct {
+type soapAuthHeader struct {
 	XMLName  xml.Name `xml:"http://mfisoft.ru/auth Auth"`
 	Login    string `xml:",omitempty"`
 	Password string `xml:",omitempty"`
 }
 
-type SOAPAuth struct {
+type soapAuth struct {
 	Login    string
 	Password string
 }
 
-type SOAPFault struct {
+type soapFault struct {
 	XMLName xml.Name `xml:"http://schemas.xmlsoap.org/soap/envelope/ Fault"`
 	Code    string `xml:"faultcode,omitempty"`
 	String  string `xml:"faultstring,omitempty"`
@@ -140,17 +132,17 @@ type SOAPFault struct {
 	Detail  string `xml:"detail,omitempty"`
 }
 
-func (f *SOAPFault) Error() string {
+func (f *soapFault) Error() string {
 	return f.String
 }
 
-type SOAPBody struct {
+type soapBody struct {
 	XMLName xml.Name `xml:"http://schemas.xmlsoap.org/soap/envelope/ Body"`
-	Fault   *SOAPFault  `xml:",omitempty"`
+	Fault   *soapFault  `xml:",omitempty"`
 	Content interface{} `xml:",omitempty"`
 }
 
-func (b *SOAPBody) UnmarshalXML(d *xml.Decoder, start xml.StartElement) error {
+func (b *soapBody) UnmarshalXML(d *xml.Decoder, start xml.StartElement) error {
 	if b.Content == nil {
 		return xml.UnmarshalError("Content must be a pointer to a struct")
 	}
@@ -176,7 +168,7 @@ func (b *SOAPBody) UnmarshalXML(d *xml.Decoder, start xml.StartElement) error {
 			if consumed {
 				return xml.UnmarshalError("Found multiple elements inside SOAP body; not wrapped-document/literal WS-I compliant")
 			} else if se.Name.Space == "http://schemas.xmlsoap.org/soap/envelope/" && se.Name.Local == "Fault" {
-				b.Fault = &SOAPFault{}
+				b.Fault = &soapFault{}
 				b.Content = nil
 
 				err = d.DecodeElement(b.Fault, &se)
