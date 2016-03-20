@@ -44,6 +44,13 @@ const (
 	simpleFilter filterType = "cond"
 )
 
+type FilterHandleCondition string
+
+const (
+	FilterHandleOR FilterHandleCondition = "or"
+	FilterHandleAND FilterHandleCondition = "and"
+)
+
 var filterConditions = []string{"<=", ">=", "<>", "like", "not like", "regexp", ">", "<", "="}
 
 

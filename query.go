@@ -97,11 +97,11 @@ func (q *queryBuilder) Values(rowset []map[string]string) *queryBuilder {
 	return q
 }
 
-func (q *queryBuilder) Filters(handleCondition string, filters []string) *queryBuilder {
+func (q *queryBuilder) Filters(hc FilterHandleCondition, filters []string) *queryBuilder {
 	q.Request.Filter = new(requestFilter)
 	q.Request.Filter.Item = &requestFilterItem{
 		Type_: complexFilter,
-		Operator: handleCondition,
+		Operator: string(hc),
 		Childs: &requestFilterChildsArr{},
 	}
 	q.Request.Filter.Item.Childs.Items, q.err = sliceToChildFilters(filters)

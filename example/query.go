@@ -41,7 +41,7 @@ func main() {
 		"out_ani=10987654321",
 	}
 
-	res, err := query.Select().From(rtu.TableCDRHour).Filters("and", filters).OrderBy(sort).Limit(2).Offset(1).GetCDRs()
+	res, err := query.Select().From(rtu.TableCDRHour).Filters(rtu.FilterHandleAND, filters).OrderBy(sort).Limit(2).Offset(1).GetCDRs()
 
 	if err != nil {
 		log.Println(err)
