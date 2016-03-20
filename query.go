@@ -314,7 +314,7 @@ func (q *queryBuilder) GetCDRs() (cs *CDRs, err error) {
 		for _, item := range it.Items {
 			cdr.SetField(item.Key, item.Value)
 		}
-		cs.Items = append(cs.Items, *cdr)
+		cs.Items = append(cs.Items, cdr)
 	}
 	return cs, nil
 }

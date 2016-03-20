@@ -8,7 +8,7 @@ import (
 )
 
 type CDRs struct {
-	Items []CDR
+	Items []*CDR
 }
 
 type CDR struct {
