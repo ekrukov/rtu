@@ -37,8 +37,13 @@ const (
 	describeMethod methodType = "describeColumns"
 )
 
+type filterType string
+
+const (
+	complexFilter filterType = "agg"
+	simpleFilter filterType = "cond"
+)
+
 var filterConditions = []string{"<=", ">=", "<>", "like", "not like", "regexp", ">", "<", "="}
-
-
 
 

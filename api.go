@@ -18,7 +18,7 @@ type requestTable struct {
 
 type requestFilterItem struct {
 	XMLName  xml.Name `xml:"http://mfisoft.ru/voip/service/soap p_filter"`
-	Type_    string `xml:"type,omitempty"`
+	Type_    filterType `xml:"type,omitempty"`
 	Column   string `xml:"column,omitempty"`
 	Operator string `xml:"operator,omitempty"`
 	Value    string `xml:"value,omitempty"`

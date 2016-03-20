@@ -11,7 +11,7 @@ var (
 
 func stringToFilter(s string) (f *requestFilterItem, err error) {
 	f = new(requestFilterItem)
-	f.Type_ = "cond"
+	f.Type_ = simpleFilter
 	for _, cond := range filterConditions {
 		if condPosition := strings.Index(s, cond); condPosition != -1 {
 			valuePos := len(cond) + condPosition

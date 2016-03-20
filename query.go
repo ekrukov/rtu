@@ -100,7 +100,7 @@ func (q *queryBuilder) Values(rowset []map[string]string) *queryBuilder {
 func (q *queryBuilder) Filters(handleCondition string, filters []string) *queryBuilder {
 	q.Request.Filter = new(requestFilter)
 	q.Request.Filter.Item = &requestFilterItem{
-		Type_: "agg",
+		Type_: complexFilter,
 		Operator: handleCondition,
 		Childs: &requestFilterChildsArr{},
 	}
