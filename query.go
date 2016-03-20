@@ -106,7 +106,7 @@ func (q *queryBuilder) Filters(handleCondition string, filters []string) *queryB
 }
 
 func (q *queryBuilder) Where(f string) *queryBuilder {
-	q.Request.Filter, q.err = stringToFilter(f)
+	q.Request.Filter.Item, q.err = stringToFilter(f)
 	return q
 }
 

@@ -6,13 +6,12 @@ import (
 )
 
 var (
-	errFilterUnknownField = errors.New("Unknown field in filter map")
 	errFilterUnknownCondition = errors.New("Unknown condition in filter string")
 )
 
-func stringToFilter(s string) (f *requestFilter, err error) {
+func stringToFilter(s string) (f *requestFilterItem, err error) {
 	f = new(requestFilter)
-	f.Item.Type_ = "cond"
+	f.Type_ = "cond"
 	for _, cond := range filterConditions {
 		if condPosition := strings.Index(s, cond); condPosition != -1 {
 			valuePos := len(cond) + condPosition
@@ -21,9 +20,9 @@ func stringToFilter(s string) (f *requestFilter, err error) {
 			if cond == "like" || cond == "not like" {
 				value = "%" + value + "%"
 			}
-			f.Item.Column = column
-			f.Item.Operator = cond
-			f.Item.Value = value
+			f.Column = column
+			f.Operator = cond
+			f.Value = value
 			return f, nil
 		}
 	}
@@ -50,16 +49,9 @@ func sliceToChildFilters(s []string) (fi []requestFilterItem, err error) {
 		if err != nil {
 			return nil, err
 		}
-		fi = append(fi, cf.Item)
+		fi = append(fi, cf)
 	}
 	return fi, nil
-}
-
-func checkInMap(m map[string]string, key string) (value string, err error) {
-	if value, ok := m[key]; ok {
-		return value, nil
-	}
-	return "", errFilterUnknownField
 }
 
 func mapToRow(m map[string]string) (r *requestRow, err error) {
