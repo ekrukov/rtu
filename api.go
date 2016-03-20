@@ -87,13 +87,13 @@ type responseInt struct {
 type responseRowset struct {
 	Result struct {
 		       XMLName xml.Name `xml:"result"`
-		       Items   []responseRow `xml:"item"`
+		       Items   []*responseRow `xml:"item"`
 	       }
 }
 
 type responseRow struct {
 	XMLName xml.Name `xml:"item"`
-	Items   []responseColumn `xml:"item"`
+	Items   []*responseColumn `xml:"item"`
 }
 
 type responseColumn struct {

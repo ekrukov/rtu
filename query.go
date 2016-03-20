@@ -109,6 +109,7 @@ func (q *queryBuilder) Filters(handleCondition string, filters []string) *queryB
 }
 
 func (q *queryBuilder) Where(f string) *queryBuilder {
+	q.Request.Filter = new(requestFilter)
 	q.Request.Filter.Item, q.err = stringToFilter(f)
 	return q
 }
@@ -263,7 +264,7 @@ func (q *queryBuilder) GetRaw() (*rawResult, error) {
 	return q.Result, nil
 }
 
-func (q *queryBuilder) GetRows() ([]responseRow, error) {
+func (q *queryBuilder) GetRows() ([]*responseRow, error) {
 	err := q.queryExec()
 	if err != nil {
 		log.Fatal(err)

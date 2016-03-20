@@ -26,7 +26,9 @@ func main() {
 		log.Println(err)
 	}
 
-	log.Printf("%+v", res)
+	for in, it := range res.Items {
+		log.Printf("%v, %v", in, it)
+	}
 
 	/*Select with complex filter example
 
@@ -45,7 +47,9 @@ func main() {
 		log.Println(err)
 	}
 
-	log.Printf("%+v", res)
+	for in, it := range res.Items {
+		log.Printf("%v, %v", in, it)
+	}
 
 	/* Describe example
 
