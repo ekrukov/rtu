@@ -9,8 +9,8 @@ var (
 	errFilterUnknownCondition = errors.New("Unknown condition in filter string")
 )
 
-func stringToFilter(s string) (fi *requestFilterItem, err error) {
-	f := new(requestFilterItem)
+func stringToFilter(s string) (f *requestFilterItem, err error) {
+	f = new(requestFilterItem)
 	f.Type_ = "cond"
 	for _, cond := range filterConditions {
 		if condPosition := strings.Index(s, cond); condPosition != -1 {
