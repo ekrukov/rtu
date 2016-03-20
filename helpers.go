@@ -9,8 +9,8 @@ var (
 	errFilterUnknownCondition = errors.New("Unknown condition in filter string")
 )
 
-func stringToFilter(s string) (f *requestFilterItem, err error) {
-	f = new(requestFilter)
+func stringToFilter(s string) (fi *requestFilterItem, err error) {
+	f := new(requestFilterItem)
 	f.Type_ = "cond"
 	for _, cond := range filterConditions {
 		if condPosition := strings.Index(s, cond); condPosition != -1 {
@@ -30,9 +30,9 @@ func stringToFilter(s string) (f *requestFilterItem, err error) {
 }
 
 func mapToSort(m map[string]Ordertype) (s *requestSort, err error) {
-	items := []requestSortItem{}
+	items := []*requestSortItem{}
 	for column, dir := range m {
-		items = append(items, requestSortItem{
+		items = append(items, &requestSortItem{
 			Column: column,
 			Dir: dir,
 		})
@@ -42,8 +42,8 @@ func mapToSort(m map[string]Ordertype) (s *requestSort, err error) {
 	return s, err
 }
 
-func sliceToChildFilters(s []string) (fi []requestFilterItem, err error) {
-	fi = []requestFilterItem{}
+func sliceToChildFilters(s []string) (fi []*requestFilterItem, err error) {
+	fi = []*requestFilterItem{}
 	for _, sf := range s {
 		cf, err := stringToFilter(sf)
 		if err != nil {
@@ -55,9 +55,9 @@ func sliceToChildFilters(s []string) (fi []requestFilterItem, err error) {
 }
 
 func mapToRow(m map[string]string) (r *requestRow, err error) {
-	columnMap := []requestColumn{}
+	columnMap := []*requestColumn{}
 	for key, value := range m {
-		columnMap = append(columnMap, requestColumn{
+		columnMap = append(columnMap, &requestColumn{
 			Name: key,
 			Value: value,
 		})
@@ -67,10 +67,10 @@ func mapToRow(m map[string]string) (r *requestRow, err error) {
 }
 
 func mapsToRowset(m []map[string]string) (r *requestRowset, err error) {
-	rows := []requestRow{}
+	rows := []*requestRow{}
 	for _, row := range m {
 		rowMap, err := mapToRow(row)
-		rows = append(rows, *rowMap)
+		rows = append(rows, rowMap)
 		if err != nil {
 			return nil, err
 		}

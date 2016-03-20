@@ -22,21 +22,21 @@ type requestFilterItem struct {
 	Column   string `xml:"column,omitempty"`
 	Operator string `xml:"operator,omitempty"`
 	Value    string `xml:"value,omitempty"`
-	Childs   requestFilterChildsArr `xml:"childs,omitempty"`
+	Childs   *requestFilterChildsArr `xml:"childs,omitempty"`
 }
 
 type requestFilter struct {
-	Item requestFilterItem
+	Item *requestFilterItem
 }
 
 type requestFilterChildsArr struct {
-	Items []requestFilterItem
+	Items []*requestFilterItem
 }
 
 type requestSort struct {
 	P_sort struct {
 		       XMLName xml.Name `xml:"http://mfisoft.ru/voip/service/soap p_sort"`
-		       Items   []requestSortItem `xml:"http://mfisoft.ru/voip/service/soap item"`
+		       Items   []*requestSortItem `xml:"http://mfisoft.ru/voip/service/soap item"`
 	       }
 }
 
@@ -49,13 +49,13 @@ type requestSortItem struct {
 type requestRowset struct {
 	P_rowset struct {
 			 XMLName xml.Name `xml:"http://mfisoft.ru/voip/service/soap p_rowset"`
-			 Rows    []requestRow `xml:"item"`
+			 Rows    []*requestRow `xml:"item"`
 		 }
 }
 
 type requestRow struct {
 	XMLName xml.Name `xml:"http://mfisoft.ru/voip/service/soap row"`
-	Items   []requestColumn `xml:"http://mfisoft.ru/voip/service/soap item"`
+	Items   []*requestColumn `xml:"http://mfisoft.ru/voip/service/soap item"`
 }
 
 type requestColumn struct {

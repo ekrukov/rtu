@@ -98,9 +98,12 @@ func (q *queryBuilder) Values(rowset []map[string]string) *queryBuilder {
 }
 
 func (q *queryBuilder) Filters(handleCondition string, filters []string) *queryBuilder {
-	q.Request.Filter = &requestFilter{}
-	q.Request.Filter.Item.Type_ = "agg"
-	q.Request.Filter.Item.Operator = handleCondition
+	q.Request.Filter = new(requestFilter)
+	q.Request.Filter.Item = &requestFilterItem{
+		Type_: "agg",
+		Operator: handleCondition,
+		Childs: &requestFilterChildsArr{},
+	}
 	q.Request.Filter.Item.Childs.Items, q.err = sliceToChildFilters(filters)
 	return q
 }
