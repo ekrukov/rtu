@@ -94,6 +94,46 @@ type CDR struct {
 	DST_DISCONNECT_CODES     string
 }
 
+type PreroutingRule struct {
+	RULE_ID             string
+	RULE_NAME           string
+	DESCRIPTION         string
+	ENABLE              string
+	PRIORITY            string
+	ANI_PATTERN         string
+	DNIS_PATTERN        string
+	ORIG_DNIS_PATTERN   string
+	ANI_EXCLUDE         string
+	DNIS_EXCLUDE        string
+	ORIG_DNIS_EXCLUDE   string
+	GROUP_ALLOW         string
+	GROUP_DENY          string
+	ANI_TRANSLATE       string
+	ANI_BILL_TRANSLATE  string
+	DNIS_TRANSLATE      string
+	DNIS_BILL_TRANSLATE string
+	ORIG_DNIS_TRANSLATE string
+	ANI_SORM_TRANSLATE  string
+	DNIS_SORM_TRANSLATE string
+	GROUP_TRANSLATE     string
+	CPC_ALLOW           string
+	CPC_DENY            string
+	CPC_TRANSLATE       string
+	ACTION              string
+	DISCONNECT_CODE     string
+	SCHED_TYPE          string
+	SCHED_TOD           string
+	SCHED_TOD_MON       string
+	SCHED_TOD_TUE       string
+	SCHED_TOD_WED       string
+	SCHED_TOD_THU       string
+	SCHED_TOD_FRI       string
+	SCHED_TOD_SAT       string
+	SCHED_TOD_SUN       string
+	SCHED_TOM           string
+	SCHED_TOY           string
+}
+
 func (c *CDR) SetField(fn string, fv string) {
 	s := reflect.ValueOf(c).Elem()
 	if s.Kind() == reflect.Struct {

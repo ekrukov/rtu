@@ -47,9 +47,9 @@ func (q *queryBuilder) Select() *queryBuilder {
 	return q
 }
 
-func (q *queryBuilder) Update(table string) *queryBuilder {
+func (q *queryBuilder) Update(table TableName) *queryBuilder {
 	q.Request.Method = updateMethod
-	q.Request.Table.P_table_hi, q.err = GetTableIdByName(table)
+	q.Request.Table.P_table_hi = table
 	return q
 }
 
@@ -74,18 +74,18 @@ func (q *queryBuilder) Set(rowset []map[string]string) *queryBuilder {
 	return q
 }
 
-func (q *queryBuilder) From(table string) *queryBuilder {
+func (q *queryBuilder) From(table TableName) *queryBuilder {
 	if q.Request.Method == selectMethod || q.Request.Method == deleteMethod {
-		q.Request.Table.P_table_hi, q.err = GetTableIdByName(table)
+		q.Request.Table.P_table_hi = table
 	} else {
 		q.err = errFromWOSelectOrDelete
 	}
 	return q
 }
 
-func (q *queryBuilder) Into(table string) *queryBuilder {
+func (q *queryBuilder) Into(table TableName) *queryBuilder {
 	if q.Request.Method == insertMethod {
-		q.Request.Table.P_table_hi, q.err = GetTableIdByName(table)
+		q.Request.Table.P_table_hi = table
 	} else {
 		q.err = errIntoWOInsert
 	}
@@ -114,7 +114,7 @@ func (q *queryBuilder) Where(f string) *queryBuilder {
 	return q
 }
 
-func (q *queryBuilder) OrderBy(sort map[string]Ordertype) *queryBuilder {
+func (q *queryBuilder) OrderBy(sort map[string]OrderType) *queryBuilder {
 	q.Request.Sort, q.err = mapToSort(sort)
 	return q
 }
@@ -129,15 +129,15 @@ func (q *queryBuilder) Offset(offset int) *queryBuilder {
 	return q
 }
 
-func (q *queryBuilder) Describe(table string) *queryBuilder {
+func (q *queryBuilder) Describe(table TableName) *queryBuilder {
 	q.Request.Method = describeMethod
-	q.Request.Table.P_table_hi, q.err = GetTableIdByName(table)
+	q.Request.Table.P_table_hi = table
 	return q
 }
 
-func (q *queryBuilder) Count(table string) *queryBuilder {
+func (q *queryBuilder) Count(table TableName) *queryBuilder {
 	q.Request.Method = countMethod
-	q.Request.Table.P_table_hi, q.err = GetTableIdByName(table)
+	q.Request.Table.P_table_hi = table
 	return q
 }
 

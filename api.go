@@ -13,7 +13,7 @@ type requestColumnName struct {
 }
 
 type requestTable struct {
-	P_table_hi string `xml:"p_table_hi"`
+	P_table_hi TableName `xml:"p_table_hi"`
 }
 
 type requestFilterItem struct {
@@ -43,7 +43,7 @@ type requestSort struct {
 type requestSortItem struct {
 	XMLName xml.Name `xml:"http://mfisoft.ru/voip/service/soap sort_item"`
 	Column  string `xml:"column,omitempty"`
-	Dir     Ordertype `xml:"dir,omitempty"`
+	Dir     OrderType `xml:"dir,omitempty"`
 }
 
 type requestRowset struct {

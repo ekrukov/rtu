@@ -29,7 +29,7 @@ func stringToFilter(s string) (f *requestFilterItem, err error) {
 	return f, errFilterUnknownCondition
 }
 
-func mapToSort(m map[string]Ordertype) (s *requestSort, err error) {
+func mapToSort(m map[string]OrderType) (s *requestSort, err error) {
 	items := []*requestSortItem{}
 	for column, dir := range m {
 		items = append(items, &requestSortItem{

@@ -16,11 +16,11 @@ func main() {
 
 	/*Simple select example */
 
-	sort := map[string]rtu.Ordertype{
-		"cdr_id" : rtu.OrdertypeAsc,
+	sort := map[string]rtu.OrderType{
+		"cdr_id" : rtu.OrderTypeAsc,
 	}
 
-	res, err := query.Select().From("cdrH").Where("in_ani = 11111111111").OrderBy(sort).Limit(2).Offset(1).GetCDRs()
+	res, err := query.Select().From(rtu.TableCDRHour).Where("in_ani = 11111111111").OrderBy(sort).Limit(2).Offset(1).GetCDRs()
 
 	if err != nil {
 		log.Println(err)
@@ -32,8 +32,8 @@ func main() {
 
 	/*Select with complex filter example
 
-	sort := map[string]rtu.Ordertype{
-		"cdr_id" : rtu.OrdertypeAsc,
+	sort := map[string]rtu.OrderType{
+		"cdr_id" : rtu.OrderTypeAsc,
 	}
 
 	filters := []string {
@@ -41,7 +41,7 @@ func main() {
 		"out_ani=10987654321",
 	}
 
-	res, err := query.Select().From("cdrH").Filters("and", filters).OrderBy(sort).Limit(2).Offset(1).GetCDRs()
+	res, err := query.Select().From(rtu.TableCDRHour).Filters("and", filters).OrderBy(sort).Limit(2).Offset(1).GetCDRs()
 
 	if err != nil {
 		log.Println(err)
@@ -53,7 +53,7 @@ func main() {
 
 	/* Describe example
 
-	res, err := query.Describe("cdrH").GetRows()
+	res, err := query.Describe(rtu.TableCDRHour).GetRows()
 	if err != nil {
 		log.Println(err)
 	}
@@ -67,7 +67,7 @@ func main() {
 
 	/* Count example
 
-	res, err := query.Count("cdrH").Where("in_ani = 11111111111").GetInt()
+	res, err := query.Count(rtu.TableCDRHour).Where("in_ani = 11111111111").GetInt()
 	if err != nil {
 		log.Println(err)
 	}
@@ -89,7 +89,7 @@ func main() {
 			"dnis_exclude" : "1111111111[0-9]",
 		},
 	}
-	res, err := query.Insert().Into("prerouting").Values(rowset).GetInt()
+	res, err := query.Insert().Into(rtu.TablePrerouting).Values(rowset).GetInt()
 	if err != nil {
 		log.Println(err)
 		return
@@ -104,7 +104,7 @@ func main() {
 		},
 	}
 
-	res, err := query.Update("prerouting").Set(rowset).Where("rule_name=testrule").GetInt()
+	res, err := query.Update(rtu.TablePrerouting).Set(rowset).Where("rule_name=testrule").GetInt()
 
 	if err != nil {
 		log.Println(err)
@@ -116,7 +116,7 @@ func main() {
 	/* Delete example
 
 
-	res, err := query.Delete().From("prerouting").Where("rule_name=testrule").GetInt()
+	res, err := query.Delete().From(rtu.TablePrerouting).Where("rule_name=testrule").GetInt()
 	if err != nil {
 		log.Println(err)
 	}
