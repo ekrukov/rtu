@@ -91,7 +91,7 @@ func main() {
 	}
 	res, err := pr.Insert(client)
 	if err != nil {
-		log.Println("ERROR: " + err.Error())
+		log.Println(err)
 		return
 	}
 	log.Printf("%v", res)

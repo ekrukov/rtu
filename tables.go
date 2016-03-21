@@ -7,11 +7,8 @@ import (
 	"os"
 )
 
-type rtuCRUDer interface {
-	rtuSelecter
+type rtuInserter interface {
 	Insert(*RTUClient) (int, error)
-	Update(*RTUClient) (int, error)
-	Delete(*RTUClient) (int, error)
 }
 
 type rtuSelecter interface {
@@ -145,7 +142,6 @@ type Prerouting struct {
 	SCHED_TOY           string
 }
 
-
 func (p *Prerouting) Insert(rc *RTUClient) (count int, err error) {
 	rm, err := rowStructToMap(p)
 	rsm := []map[string]string{
@@ -156,14 +152,6 @@ func (p *Prerouting) Insert(rc *RTUClient) (count int, err error) {
 	}
 	count, err = rc.Query().Insert().Into(TablePrerouting).Values(rsm).GetInt()
 	return count, err
-}
-
-func (p *Prerouting) Update(*RTUClient) (int, error) {
-	return 0, nil
-}
-
-func (p *Prerouting) Delete(*RTUClient) (int, error) {
-	return 0, nil
 }
 
 func (p *Prerouting) Select(*RTUClient) (*responseRowset, error) {
@@ -200,7 +188,7 @@ func setStructField(s rtuSelecter, fn string, fv string) {
 	return
 }
 
-func rowStructToMap(s rtuCRUDer) (map[string]string, error) {
+func rowStructToMap(s rtuInserter) (map[string]string, error) {
 	out := make(map[string]string)
 	v := reflect.Indirect(reflect.ValueOf(s))
 	for i := 0; i < v.NumField(); i++ {
