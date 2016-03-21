@@ -298,12 +298,12 @@ func (q *queryBuilder) GetInt() (int, error) {
 	return 0, errMethodUnsupport
 }
 
-func (q *queryBuilder) GetCDRs() (cs *CDRs, err error) {
+func (q *queryBuilder) GetCDRs() (cs []*CDR, err error) {
 	if q.Request.Method != selectMethod {
 		err = errMethodUnsupport
 		return nil, err
 	}
-	cs = new(CDRs)
+	cs = []*CDR{}
 	rows, err := q.GetRows()
 	if err != nil {
 		log.Fatal(err)
@@ -314,7 +314,7 @@ func (q *queryBuilder) GetCDRs() (cs *CDRs, err error) {
 		for _, item := range it.Items {
 			cdr.SetField(item.Key, item.Value)
 		}
-		cs.Items = append(cs.Items, cdr)
+		cs = append(cs, cdr)
 	}
 	return cs, nil
 }

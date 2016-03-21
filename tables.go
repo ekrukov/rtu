@@ -7,10 +7,6 @@ import (
 	"os"
 )
 
-type CDRs struct {
-	Items []*CDR
-}
-
 type CDR struct {
 	CDR_ID                   string
 	CDR_DATE                 string

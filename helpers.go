@@ -13,6 +13,7 @@ func stringToFilter(s string) (f *requestFilterItem, err error) {
 	f = new(requestFilterItem)
 	f.Type_ = simpleFilter
 	for _, cond := range filterConditions {
+		cond = strings.ToLower(cond)
 		if condPosition := strings.Index(s, cond); condPosition != -1 {
 			valuePos := len(cond) + condPosition
 			column := strings.TrimSpace(s[:condPosition])
@@ -32,6 +33,7 @@ func stringToFilter(s string) (f *requestFilterItem, err error) {
 func mapToSort(m map[string]OrderType) (s *requestSort, err error) {
 	items := []*requestSortItem{}
 	for column, dir := range m {
+		column = strings.ToLower(column)
 		items = append(items, &requestSortItem{
 			Column: column,
 			Dir: dir,
@@ -57,6 +59,7 @@ func sliceToChildFilters(s []string) (fi []*requestFilterItem, err error) {
 func mapToRow(m map[string]string) (r *requestRow, err error) {
 	columnMap := []*requestColumn{}
 	for key, value := range m {
+		key = strings.ToLower(key)
 		columnMap = append(columnMap, &requestColumn{
 			Name: key,
 			Value: value,
