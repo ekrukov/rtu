@@ -307,9 +307,7 @@ func (q *queryBuilder) GetCDRs() (cs []*CDR, err error) {
 	}
 	for _, it := range rows {
 		cdr := new(CDR)
-		for _, item := range it.Items {
-			cdr.SetField(item.Key, item.Value)
-		}
+		fillStruct(cdr, it)
 		cs = append(cs, cdr)
 	}
 	return cs, nil

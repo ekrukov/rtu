@@ -7,7 +7,23 @@ import (
 	"os"
 )
 
+type rtuCRUDer interface {
+	rtuSelecter
+	Insert(*RTUClient) (int, error)
+	Update(*RTUClient) (int, error)
+	Delete(*RTUClient) (int, error)
+}
+
+type rtuSelecter interface {
+	Select(*RTUClient) (*responseRowset, error)
+	GetColumns() interface{}
+}
+
 type CDR struct {
+	Columns *CDRColumns
+}
+
+type CDRColumns struct {
 	CDR_ID                   string
 	CDR_DATE                 string
 	RECORD_TYPE              string
@@ -90,7 +106,20 @@ type CDR struct {
 	DST_DISCONNECT_CODES     string
 }
 
-type PreroutingRule struct {
+
+func (c *CDR) GetColumns() (interface{}) {
+	return c.Columns
+}
+
+func (c *CDR) Select(*RTUClient) (*responseRowset, error) {
+	return &responseRowset{}, nil
+}
+
+type Prerouting struct {
+	TableName TableName
+	Columns   *PreroutingColumns
+}
+type PreroutingColumns struct {
 	RULE_ID             string
 	RULE_NAME           string
 	DESCRIPTION         string
@@ -130,10 +159,55 @@ type PreroutingRule struct {
 	SCHED_TOY           string
 }
 
-func (c *CDR) SetField(fn string, fv string) {
-	s := reflect.ValueOf(c).Elem()
-	if s.Kind() == reflect.Struct {
-		f := s.FieldByName(strings.ToUpper(fn))
+func NewPrerouting() *Prerouting {
+	return &Prerouting{
+		TableName: TablePrerouting,
+	}
+}
+
+func (p *Prerouting) Insert(rc *RTUClient) (count int, err error) {
+	rm, err := rowStructToMap(p)
+	rsm := []map[string]string{
+		0: rm,
+	}
+	if err != nil {
+		return 0, err
+	}
+	count, err = rc.Query().Insert().Into(p.TableName).Values(rsm).GetInt()
+	return count, err
+}
+
+func (p *Prerouting) Update(*RTUClient) (int, error) {
+	return 0, nil
+}
+
+func (p *Prerouting) Delete(*RTUClient) (int, error) {
+	return 0, nil
+}
+
+func (p *Prerouting) Select(*RTUClient) (*responseRowset, error) {
+	return &responseRowset{}, nil
+}
+
+func (p *Prerouting) GetColumns() (interface{}) {
+	return p.Columns
+}
+
+
+
+//Interface functions
+
+func fillStruct(s rtuSelecter, r *responseRow) {
+	for _, item := range r.Items {
+		setStructField(s, item.Key, item.Value)
+	}
+	return
+}
+
+func setStructField(s rtuSelecter, fn string, fv string) {
+	v := reflect.ValueOf(s.GetColumns()).Elem()
+	if v.Kind() == reflect.Struct {
+		f := v.FieldByName(strings.ToUpper(fn))
 		if f.IsValid() {
 			if f.CanSet() {
 				if f.Kind() == reflect.String {
@@ -148,23 +222,12 @@ func (c *CDR) SetField(fn string, fv string) {
 			os.Exit(0)
 		}
 	}
+	return
 }
 
-func (p *PreroutingRule) Insert(rc *RTUClient) (count int, err error) {
-	rm, err := p.toMap()
-	rsm := []map[string]string{
-		0: rm,
-	}
-	if err != nil {
-		return 0, err
-	}
-	count, err = rc.Query().Insert().Into(TablePrerouting).Values(rsm).GetInt()
-	return count, err
-}
-
-func (p *PreroutingRule) toMap() (map[string]string, error) {
+func rowStructToMap(s rtuCRUDer) (map[string]string, error) {
 	out := make(map[string]string)
-	v := reflect.ValueOf(*p)
+	v := reflect.Indirect(reflect.ValueOf(s.GetColumns()))
 	for i := 0; i < v.NumField(); i++ {
 		key := v.Type().Field(i).Name
 		value := v.Field(i).String()

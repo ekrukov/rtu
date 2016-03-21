@@ -80,8 +80,8 @@ func main() {
 
 	client := rtu.NewRTUClient(serverName, serverLogin, serverPass)
 
-
-	rule := rtu.PreroutingRule{
+	pr := rtu.NewPrerouting()
+	pr.Columns = &rtu.PreroutingColumns{
 		RULE_NAME : "testrule",
 		PRIORITY : "100",
 		DISCONNECT_CODE : "262546",
@@ -90,9 +90,9 @@ func main() {
 		ANI_PATTERN : "11111111111",
 		DNIS_EXCLUDE : "1111111111[0-9]",
 	}
-	res, err := rule.Insert(client)
+	res, err := pr.Insert(client)
 	if err != nil {
-		log.Println(err)
+		log.Println("ERROR: " + err.Error())
 		return
 	}
 	log.Printf("%v", res)
