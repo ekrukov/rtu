@@ -258,7 +258,6 @@ func (q *queryBuilder) queryExec() error {
 func (q *queryBuilder) GetRaw() (*rawResult, error) {
 	err := q.queryExec()
 	if err != nil {
-		log.Fatal(err)
 		return nil, err
 	}
 	return q.Result, nil
@@ -267,7 +266,6 @@ func (q *queryBuilder) GetRaw() (*rawResult, error) {
 func (q *queryBuilder) GetRows() ([]*responseRow, error) {
 	err := q.queryExec()
 	if err != nil {
-		log.Fatal(err)
 		return nil, err
 	}
 	switch q.Request.Method {
@@ -282,7 +280,6 @@ func (q *queryBuilder) GetRows() ([]*responseRow, error) {
 func (q *queryBuilder) GetInt() (int, error) {
 	err := q.queryExec()
 	if err != nil {
-		log.Fatal(err)
 		return 0, err
 	}
 	switch q.Request.Method {
@@ -306,7 +303,6 @@ func (q *queryBuilder) GetCDRs() (cs []*CDR, err error) {
 	cs = []*CDR{}
 	rows, err := q.GetRows()
 	if err != nil {
-		log.Fatal(err)
 		return nil, err
 	}
 	for _, it := range rows {

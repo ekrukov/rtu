@@ -150,3 +150,27 @@ func (c *CDR) SetField(fn string, fv string) {
 	}
 }
 
+func (p *PreroutingRule) Insert(rc *RTUClient) (count int, err error) {
+	rm, err := p.toMap()
+	rsm := []map[string]string{
+		0: rm,
+	}
+	if err != nil {
+		return 0, err
+	}
+	count, err = rc.Query().Insert().Into(TablePrerouting).Values(rsm).GetInt()
+	return count, err
+}
+
+func (p *PreroutingRule) toMap() (map[string]string, error) {
+	out := make(map[string]string)
+	v := reflect.ValueOf(*p)
+	for i := 0; i < v.NumField(); i++ {
+		key := v.Type().Field(i).Name
+		value := v.Field(i).String()
+		if value != "" {
+			out[key] = value
+		}
+	}
+	return out, nil
+}

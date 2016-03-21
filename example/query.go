@@ -78,18 +78,19 @@ func main() {
 
 	/* Insert example
 
-	rowset := []map[string]string{
-		0: {
-			"RULE_NAME" : "testrule",
-			"PRIORITY" : "100",
-			"DISCONNECT_CODE" : "262546",
-			"ACTION" : "2",
-			"DESCRIPTION" : "testdesc",
-			"ANI_PATTERN" : "11111111111",
-			"DNIS_EXCLUDE" : "1111111111[0-9]",
-		},
+	client := rtu.NewRTUClient(serverName, serverLogin, serverPass)
+
+
+	rule := rtu.PreroutingRule{
+		RULE_NAME : "testrule",
+		PRIORITY : "100",
+		DISCONNECT_CODE : "262546",
+		ACTION : "2",
+		DESCRIPTION : "testdesc",
+		ANI_PATTERN : "11111111111",
+		DNIS_EXCLUDE : "1111111111[0-9]",
 	}
-	res, err := query.Insert().Into(rtu.TablePrerouting).Values(rowset).GetInt()
+	res, err := rule.Insert(client)
 	if err != nil {
 		log.Println(err)
 		return
