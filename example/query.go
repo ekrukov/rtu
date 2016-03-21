@@ -80,8 +80,7 @@ func main() {
 
 	client := rtu.NewRTUClient(serverName, serverLogin, serverPass)
 
-	pr := rtu.NewPrerouting()
-	pr.Columns = &rtu.PreroutingColumns{
+	pr := &rtu.Prerouting{
 		RULE_NAME : "testrule",
 		PRIORITY : "100",
 		DISCONNECT_CODE : "262546",

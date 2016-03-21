@@ -16,14 +16,9 @@ type rtuCRUDer interface {
 
 type rtuSelecter interface {
 	Select(*RTUClient) (*responseRowset, error)
-	GetColumns() interface{}
 }
 
 type CDR struct {
-	Columns *CDRColumns
-}
-
-type CDRColumns struct {
 	CDR_ID                   string
 	CDR_DATE                 string
 	RECORD_TYPE              string
@@ -106,20 +101,11 @@ type CDRColumns struct {
 	DST_DISCONNECT_CODES     string
 }
 
-
-func (c *CDR) GetColumns() (interface{}) {
-	return c.Columns
-}
-
 func (c *CDR) Select(*RTUClient) (*responseRowset, error) {
 	return &responseRowset{}, nil
 }
 
 type Prerouting struct {
-	TableName TableName
-	Columns   *PreroutingColumns
-}
-type PreroutingColumns struct {
 	RULE_ID             string
 	RULE_NAME           string
 	DESCRIPTION         string
@@ -159,11 +145,6 @@ type PreroutingColumns struct {
 	SCHED_TOY           string
 }
 
-func NewPrerouting() *Prerouting {
-	return &Prerouting{
-		TableName: TablePrerouting,
-	}
-}
 
 func (p *Prerouting) Insert(rc *RTUClient) (count int, err error) {
 	rm, err := rowStructToMap(p)
@@ -173,7 +154,7 @@ func (p *Prerouting) Insert(rc *RTUClient) (count int, err error) {
 	if err != nil {
 		return 0, err
 	}
-	count, err = rc.Query().Insert().Into(p.TableName).Values(rsm).GetInt()
+	count, err = rc.Query().Insert().Into(TablePrerouting).Values(rsm).GetInt()
 	return count, err
 }
 
@@ -189,12 +170,6 @@ func (p *Prerouting) Select(*RTUClient) (*responseRowset, error) {
 	return &responseRowset{}, nil
 }
 
-func (p *Prerouting) GetColumns() (interface{}) {
-	return p.Columns
-}
-
-
-
 //Interface functions
 
 func fillStruct(s rtuSelecter, r *responseRow) {
@@ -205,7 +180,7 @@ func fillStruct(s rtuSelecter, r *responseRow) {
 }
 
 func setStructField(s rtuSelecter, fn string, fv string) {
-	v := reflect.ValueOf(s.GetColumns()).Elem()
+	v := reflect.ValueOf(s).Elem()
 	if v.Kind() == reflect.Struct {
 		f := v.FieldByName(strings.ToUpper(fn))
 		if f.IsValid() {
@@ -227,7 +202,7 @@ func setStructField(s rtuSelecter, fn string, fv string) {
 
 func rowStructToMap(s rtuCRUDer) (map[string]string, error) {
 	out := make(map[string]string)
-	v := reflect.Indirect(reflect.ValueOf(s.GetColumns()))
+	v := reflect.Indirect(reflect.ValueOf(s))
 	for i := 0; i < v.NumField(); i++ {
 		key := v.Type().Field(i).Name
 		value := v.Field(i).String()
