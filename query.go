@@ -252,14 +252,25 @@ func (q *queryBuilder) queryExec() error {
 func (q *queryBuilder) Count() (cnt int, err error) {
 	if q.Request.Method != "" && q.Request.Method != selectMethod {
 		err = errMethodUnsupport
-		return nil, err
+		return 0, err
 	}
 	q.Request.Method = countMethod
 	cnt, err = q.GetInt()
 	if err != nil {
-		return nil, err
+		return 0, err
 	}
 	return cnt, nil
+}
+
+func (q *queryBuilder) Exist() (e bool, err error) {
+	cnt, err := q.Count()
+	if err != nil {
+		return false, err
+	}
+	if cnt >=1 {
+		return true, nil
+	}
+	return false, nil
 }
 
 func (q *queryBuilder) GetRaw() (*rawResult, error) {
@@ -268,6 +279,19 @@ func (q *queryBuilder) GetRaw() (*rawResult, error) {
 		return nil, err
 	}
 	return q.Result, nil
+}
+
+func (q *queryBuilder) GetRow() (row *responseRow, err error) {
+	rows, err := q.GetRows()
+	if err != nil {
+		return nil, err
+	}
+	if len(rows) >=1 {
+		row = rows[0]
+	} else {
+		return nil, nil
+	}
+	return row, nil
 }
 
 func (q *queryBuilder) GetRows() ([]*responseRow, error) {
