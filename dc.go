@@ -6,11 +6,11 @@ var urlMake = func(s string) string {
 	return "https://" + s + "/service/service.php?soap"
 }
 
-type OrderType string
+type SortType string
 
 const (
-	OrderTypeAsc OrderType = "asc"
-	OrderTypeDesc OrderType = "desc"
+	SortAsc SortType = "asc"
+	SortDesc SortType = "desc"
 )
 
 type TableName string

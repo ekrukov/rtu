@@ -30,7 +30,7 @@ func stringToFilter(s string) (f *requestFilterItem, err error) {
 	return f, errFilterUnknownCondition
 }
 
-func mapToSort(m map[string]OrderType) (s *requestSort, err error) {
+func mapToSort(m map[string]SortType) (s *requestSort, err error) {
 	items := []*requestSortItem{}
 	for column, dir := range m {
 		column = strings.ToLower(column)
@@ -69,11 +69,11 @@ func mapToRow(m map[string]string) (r *requestRow, err error) {
 	return r, err
 }
 
-func mapsToRowset(m []map[string]string) (r *requestRowset, err error) {
+func mapsToRowset(ms []map[string]string) (r *requestRowset, err error) {
 	rows := []*requestRow{}
-	for _, row := range m {
-		rowMap, err := mapToRow(row)
-		rows = append(rows, rowMap)
+	for _, m := range ms {
+		row, err := mapToRow(m)
+		rows = append(rows, row)
 		if err != nil {
 			return nil, err
 		}

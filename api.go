@@ -43,7 +43,7 @@ type requestSort struct {
 type requestSortItem struct {
 	XMLName xml.Name `xml:"http://mfisoft.ru/voip/service/soap sort_item"`
 	Column  string `xml:"column,omitempty"`
-	Dir     OrderType `xml:"dir,omitempty"`
+	Dir     SortType `xml:"dir,omitempty"`
 }
 
 type requestRowset struct {

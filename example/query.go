@@ -16,8 +16,8 @@ func main() {
 
 	/*Simple select example */
 
-	sort := map[string]rtu.OrderType{
-		"CDR_ID" : rtu.OrderTypeAsc,
+	sort := map[string]rtu.SortType{
+		"CDR_ID" : rtu.SortAsc,
 	}
 
 	res, err := query.Select().From(rtu.TableCDRHour).Where("IN_ANI = 11111111111").OrderBy(sort).Limit(2).Offset(1).GetCDRs()
@@ -32,8 +32,8 @@ func main() {
 
 	/*Select with complex filter example
 
-	sort := map[string]rtu.OrderType{
-		"CDR_ID" : rtu.OrderTypeAsc,
+	sort := map[string]rtu.SortType{
+		"CDR_ID" : rtu.SortAsc,
 	}
 
 	filters := []string {
@@ -67,7 +67,7 @@ func main() {
 
 	/* Count example
 
-	res, err := query.Count(rtu.TableCDRHour).Where("IN_ANI = 11111111111").GetInt()
+	res, err := query.Select().From(rtu.TableCDRHour).Where("IN_ANI = 11111111111").Count()
 	if err != nil {
 		log.Println(err)
 	}

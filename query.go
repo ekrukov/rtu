@@ -114,7 +114,7 @@ func (q *queryBuilder) Where(f string) *queryBuilder {
 	return q
 }
 
-func (q *queryBuilder) OrderBy(sort map[string]OrderType) *queryBuilder {
+func (q *queryBuilder) OrderBy(sort map[string]SortType) *queryBuilder {
 	q.Request.Sort, q.err = mapToSort(sort)
 	return q
 }
@@ -131,12 +131,6 @@ func (q *queryBuilder) Offset(offset int) *queryBuilder {
 
 func (q *queryBuilder) Describe(table TableName) *queryBuilder {
 	q.Request.Method = describeMethod
-	q.Request.Table.P_table_hi = table
-	return q
-}
-
-func (q *queryBuilder) Count(table TableName) *queryBuilder {
-	q.Request.Method = countMethod
 	q.Request.Table.P_table_hi = table
 	return q
 }
@@ -253,6 +247,19 @@ func (q *queryBuilder) queryExec() error {
 		return errMethodNotFound
 	}
 	return nil
+}
+
+func (q *queryBuilder) Count() (cnt int, err error) {
+	if q.Request.Method != "" && q.Request.Method != selectMethod {
+		err = errMethodUnsupport
+		return nil, err
+	}
+	q.Request.Method = countMethod
+	cnt, err = q.GetInt()
+	if err != nil {
+		return nil, err
+	}
+	return cnt, nil
 }
 
 func (q *queryBuilder) GetRaw() (*rawResult, error) {
